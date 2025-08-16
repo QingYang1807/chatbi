@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: column;
   padding: 16px 0;
+  overflow: hidden;
 }
 
 .sidebar-menu {
@@ -33,6 +34,14 @@
 .sidebar-section {
   margin-bottom: 16px;
   padding: 0 12px;
+  flex-shrink: 0;
+}
+
+.sidebar-section:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .section-header {
@@ -44,8 +53,9 @@
 }
 
 .datasets-list {
-  max-height: 300px;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .dataset-item {

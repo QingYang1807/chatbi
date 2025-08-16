@@ -1,7 +1,7 @@
 // 数据状态管理
 
 import { create } from 'zustand';
-import { DataSet, DataUploadResult } from '../types';
+import { DataSet, DataUploadResult, DatasetMetadata } from '../types';
 import { dataService } from '../services/dataService';
 import { storageService } from '../services/storageService';
 import { useChatStore } from './chatStore';
@@ -9,6 +9,7 @@ import { useChatStore } from './chatStore';
 interface DataState {
   datasets: DataSet[];
   activeDataset?: DataSet;
+  activeDatasetMetadata?: DatasetMetadata; // 活动数据集的完整元数据
   isUploading: boolean;
   uploadProgress: number;
   error?: string;
@@ -40,6 +41,7 @@ interface DataState {
 export const useDataStore = create<DataState>((set, get) => ({
   datasets: [],
   activeDataset: undefined,
+  activeDatasetMetadata: undefined,
   isUploading: false,
   uploadProgress: 0,
   error: undefined,
@@ -76,6 +78,15 @@ export const useDataStore = create<DataState>((set, get) => ({
         columns: dataset.summary.totalColumns
       });
 
+      // 生成完整的元数据
+      console.log('📊 生成数据集元数据...');
+      const metadata = dataService.GenerateDatasetMetadata(dataset, file.size);
+      console.log('✅ 元数据生成成功:', {
+        qualityScore: metadata.quality.consistency.score,
+        businessDomains: metadata.semantics.businessDomain,
+        recommendedCharts: metadata.visualization.recommendedChartTypes
+      });
+
       // 保存到本地存储
       console.log('💾 保存数据集到本地存储...');
       await storageService.SaveDataset(dataset);
@@ -84,13 +95,14 @@ export const useDataStore = create<DataState>((set, get) => ({
       set((state) => ({
         datasets: [...state.datasets, dataset],
         activeDataset: dataset,
+        activeDatasetMetadata: metadata,
         isUploading: false,
         uploadProgress: 100,
       }));
 
       console.log('🎯 设置为当前活动数据集');
-      // 设置为当前聊天的数据集
-      useChatStore.getState().SetCurrentDataset(dataset.id);
+      // 设置为当前聊天的数据集，并传递完整元数据
+      useChatStore.getState().SetCurrentDatasetWithMetadata(dataset.id, metadata);
 
       // 添加系统消息
       useChatStore.getState().AddMessage({
@@ -189,7 +201,7 @@ export const useDataStore = create<DataState>((set, get) => ({
         });
         
         // 清除存储中的活跃数据集状态
-        await storageService.SetActiveDataset(null);
+        await storageService.SetActiveDataset('');
       }
 
       console.log('✅ 数据集删除完成:', dataset.name);

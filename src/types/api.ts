@@ -1,6 +1,6 @@
 // API相关类型定义
 
-import { ChartType } from './chart';
+import { ChartType, MermaidChartType } from './chart';
 
 export type GLMModel = 'glm-4.5' | 'glm-4.5-air';
 
@@ -29,6 +29,9 @@ export interface ChartSuggestion {
   description: string;
   data: any[];
   config: any;
+  // Mermaid特定属性
+  mermaidType?: MermaidChartType;
+  mermaidCode?: string;
 }
 
 export interface APIError {

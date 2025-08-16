@@ -26,6 +26,10 @@ export interface ChartData {
   title: string;
   data: any[];
   config: any;
+  // Mermaid特定属性
+  mermaidType?: string;
+  mermaidCode?: string;
+  sourceVisible?: boolean; // 是否显示源码
 }
 
 
@@ -34,6 +38,7 @@ export interface ChatContext {
   messages: ChatMessage[];
   currentDataset?: string;
   currentDatasetData?: any; // 包含实际的数据集对象
+  currentDatasetMetadata?: any; // 包含完整的数据集元数据
   sessionId: string;
 }
 

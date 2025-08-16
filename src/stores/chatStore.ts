@@ -2,13 +2,14 @@
 
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
-import { ChatMessage, ChatContext, AIResponse } from '../types';
+import { ChatMessage, ChatContext, AIResponse, DatasetMetadata } from '../types';
 import { aiService } from '../services/aiService';
 import { storageService } from '../services/storageService';
 
 interface ChatState {
   messages: ChatMessage[];
   currentDataset?: string;
+  currentDatasetMetadata?: DatasetMetadata; // 当前数据集的完整元数据
   isLoading: boolean;
   error?: string;
   sessionId: string;
@@ -21,6 +22,7 @@ interface ChatState {
   LoadChatHistory: () => Promise<void>;
   SaveChatHistory: () => Promise<void>;
   SetCurrentDataset: (datasetId?: string) => void;
+  SetCurrentDatasetWithMetadata: (datasetId?: string, metadata?: DatasetMetadata) => void;
   SetError: (error?: string) => void;
   RetryLastMessage: () => Promise<void>;
 }
@@ -28,6 +30,7 @@ interface ChatState {
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   currentDataset: undefined,
+  currentDatasetMetadata: undefined,
   isLoading: false,
   error: undefined,
   sessionId: uuidv4(),
@@ -72,6 +75,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         messages: state.messages,
         currentDataset: state.currentDataset,
         currentDatasetData: currentDatasetData,
+        currentDatasetMetadata: state.currentDatasetMetadata,
         sessionId: state.sessionId,
       };
 
@@ -93,6 +97,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
           title: chart.title,
           data: chart.data,
           config: chart.config,
+          // Mermaid特定属性
+          mermaidType: chart.mermaidType,
+          mermaidCode: chart.mermaidCode,
+          sourceVisible: false, // 默认不显示源码
         })),
       };
 
@@ -168,6 +176,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (datasetId) {
       storageService.SetActiveDataset(datasetId);
     }
+  },
+
+  SetCurrentDatasetWithMetadata: (datasetId, metadata) => {
+    set({ 
+      currentDataset: datasetId,
+      currentDatasetMetadata: metadata 
+    });
+    
+    // 保存当前活动数据集
+    if (datasetId) {
+      storageService.SetActiveDataset(datasetId);
+    }
+    
+    console.log('🎯 设置当前数据集及元数据:', {
+      datasetId,
+      hasMetadata: !!metadata,
+      qualityScore: metadata?.quality?.consistency?.score,
+      businessDomains: metadata?.semantics?.businessDomain
+    });
   },
 
   SetError: (error) => {

@@ -3,7 +3,21 @@
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
-import { DataSet, ColumnInfo, DataSummary, QueryResult, DataUploadResult, SheetInfo } from '../types';
+import { 
+  DataSet, 
+  ColumnInfo, 
+  DataSummary, 
+  QueryResult, 
+  DataUploadResult, 
+  SheetInfo,
+  DatasetMetadata,
+  EnhancedColumnInfo,
+  DataQualityIssue,
+  ColumnStatistics,
+  CategoryStatistics,
+  DateStatistics,
+  SheetMetadata
+} from '../types';
 
 class DataService {
   private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -674,6 +688,721 @@ class DataService {
       missingValues,
       duplicateRows
     };
+  }
+
+  // 生成完整的数据集元数据（AI分析专用）
+  GenerateDatasetMetadata(dataset: DataSet, originalFileSize: number): DatasetMetadata {
+    const startTime = Date.now();
+    
+    console.log('🔍 开始生成数据集元数据...');
+    
+    // 基本信息
+    const basic = {
+      id: dataset.id,
+      name: dataset.name,
+      description: dataset.description || '',
+      createdAt: dataset.createdAt,
+      updatedAt: dataset.updatedAt
+    };
+
+    // 文件信息
+    const file = {
+      fileName: dataset.fileName,
+      fileSize: originalFileSize,
+      fileSizeFormatted: this.FormatFileSize(originalFileSize),
+      fileType: this.GetFileType(dataset.fileName),
+      fileExtension: this.GetFileExtension(dataset.fileName),
+      uploadTime: dataset.uploadTime,
+      processingTime: Date.now() - startTime
+    };
+
+    // 数据结构信息
+    const actualDataRows = dataset.rows.filter(row => 
+      Object.values(row).some(val => val !== null && val !== undefined && String(val).trim() !== '')
+    ).length;
+    
+    const structure = {
+      totalRows: dataset.summary.totalRows,
+      totalColumns: dataset.summary.totalColumns,
+      actualDataRows: actualDataRows,
+      columnTypes: {
+        string: dataset.summary.stringColumns,
+        number: dataset.summary.numericColumns,
+        date: dataset.summary.dateColumns,
+        boolean: dataset.columns.filter(col => col.type === 'boolean').length
+      },
+      memoryUsage: this.EstimateMemoryUsage(dataset.rows, dataset.columns)
+    };
+
+    // 增强的列信息
+    const columns = this.GenerateEnhancedColumnInfo(dataset);
+
+    // 数据质量信息
+    const quality = this.AnalyzeDataQuality(dataset);
+
+    // 统计信息
+    const statistics = this.GenerateStatistics(dataset);
+
+    // Excel特定信息
+    const excel = dataset.sheets ? this.GenerateExcelMetadata(dataset) : undefined;
+
+    // 数据预览
+    const preview = this.GenerateDataPreview(dataset);
+
+    // 业务语义推断
+    const semantics = this.InferBusinessSemantics(dataset);
+
+    // 可视化建议
+    const visualization = this.GenerateVisualizationSuggestions(dataset);
+
+    const metadata: DatasetMetadata = {
+      basic,
+      file,
+      structure,
+      columns,
+      quality,
+      statistics,
+      excel,
+      preview,
+      semantics,
+      visualization
+    };
+
+    console.log('✅ 数据集元数据生成完成，耗时:', Date.now() - startTime, 'ms');
+    console.log('📊 元数据概览:', {
+      columns: metadata.columns.length,
+      qualityScore: metadata.quality.consistency.score,
+      businessDomain: metadata.semantics.businessDomain,
+      recommendedCharts: metadata.visualization.recommendedChartTypes
+    });
+
+    return metadata;
+  }
+
+  // 生成增强的列信息
+  private GenerateEnhancedColumnInfo(dataset: DataSet): EnhancedColumnInfo[] {
+    return dataset.columns.map(col => {
+      const columnData = dataset.rows.map(row => row[col.name]);
+      const validData = columnData.filter(val => val !== null && val !== undefined && String(val).trim() !== '');
+      
+      const enhanced: EnhancedColumnInfo = {
+        ...col,
+        statistics: {
+          count: validData.length,
+          nullCount: columnData.length - validData.length,
+          uniqueCount: new Set(validData).size,
+          nullRate: Math.round(((columnData.length - validData.length) / columnData.length) * 100),
+          uniqueRate: Math.round((new Set(validData).size / validData.length) * 100)
+        }
+      };
+
+      // 根据列类型添加特定统计信息
+      if (col.type === 'number') {
+        enhanced.numericStats = this.CalculateNumericStats(validData);
+      } else if (col.type === 'string') {
+        enhanced.textStats = this.CalculateTextStats(validData);
+      } else if (col.type === 'date') {
+        enhanced.dateStats = this.CalculateDateStats(validData);
+      }
+
+      // 业务语义推断
+      enhanced.semanticType = this.InferSemanticType(col.name, validData, col.type);
+
+      return enhanced;
+    });
+  }
+
+  // 计算数值统计
+  private CalculateNumericStats(data: any[]): any {
+    const numbers = data.map(Number).filter(n => !isNaN(n));
+    if (numbers.length === 0) return undefined;
+
+    numbers.sort((a, b) => a - b);
+    const len = numbers.length;
+    
+    const min = numbers[0];
+    const max = numbers[len - 1];
+    const mean = numbers.reduce((sum, n) => sum + n, 0) / len;
+    
+    const median = len % 2 === 0 
+      ? (numbers[len / 2 - 1] + numbers[len / 2]) / 2
+      : numbers[Math.floor(len / 2)];
+
+    const variance = numbers.reduce((sum, n) => sum + Math.pow(n - mean, 2), 0) / len;
+    const std = Math.sqrt(variance);
+
+    const q1 = numbers[Math.floor(len * 0.25)];
+    const q3 = numbers[Math.floor(len * 0.75)];
+    const iqr = q3 - q1;
+    
+    const outliers = numbers.filter(n => n < q1 - 1.5 * iqr || n > q3 + 1.5 * iqr).length;
+
+    return {
+      min,
+      max,
+      mean: Math.round(mean * 100) / 100,
+      median,
+      std: Math.round(std * 100) / 100,
+      quartiles: [q1, median, q3] as [number, number, number],
+      outliers
+    };
+  }
+
+  // 计算文本统计
+  private CalculateTextStats(data: any[]): any {
+    const texts = data.map(String);
+    if (texts.length === 0) return undefined;
+
+    const lengths = texts.map(t => t.length);
+    const minLength = Math.min(...lengths);
+    const maxLength = Math.max(...lengths);
+    const avgLength = Math.round(lengths.reduce((sum, len) => sum + len, 0) / lengths.length);
+
+    // 统计常见值
+    const valueCounts = new Map<string, number>();
+    texts.forEach(text => {
+      valueCounts.set(text, (valueCounts.get(text) || 0) + 1);
+    });
+
+    const commonValues = Array.from(valueCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([value, count]) => ({
+        value,
+        count,
+        percentage: Math.round((count / texts.length) * 100)
+      }));
+
+    // 识别模式
+    const patterns: string[] = [];
+    if (texts.some(t => /^\d+$/.test(t))) patterns.push('数字字符串');
+    if (texts.some(t => /^[A-Z0-9]+$/.test(t))) patterns.push('代码/ID');
+    if (texts.some(t => /\w+@\w+\.\w+/.test(t))) patterns.push('邮箱格式');
+    if (texts.some(t => /^\d{4}-\d{2}-\d{2}/.test(t))) patterns.push('日期格式');
+
+    return {
+      minLength,
+      maxLength,
+      avgLength,
+      patterns,
+      commonValues
+    };
+  }
+
+  // 计算日期统计
+  private CalculateDateStats(data: any[]): any {
+    const dates = data.map(d => new Date(d)).filter(d => !isNaN(d.getTime()));
+    if (dates.length === 0) return undefined;
+
+    dates.sort((a, b) => a.getTime() - b.getTime());
+    
+    const minDate = dates[0];
+    const maxDate = dates[dates.length - 1];
+    const dateRange = Math.ceil((maxDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    // 推断粒度
+    let granularity: string = 'day';
+    if (dateRange < 1) granularity = 'hour';
+    if (dateRange > 365) granularity = 'month';
+    if (dateRange > 365 * 5) granularity = 'year';
+
+    // 检测格式
+    const originalStrings = data.slice(0, 10).map(String);
+    const commonFormats: string[] = [];
+    if (originalStrings.some(s => /\d{4}-\d{2}-\d{2}/.test(s))) commonFormats.push('YYYY-MM-DD');
+    if (originalStrings.some(s => /\d{2}\/\d{2}\/\d{4}/.test(s))) commonFormats.push('MM/DD/YYYY');
+    if (originalStrings.some(s => /\d{2}-\d{2}-\d{4}/.test(s))) commonFormats.push('DD-MM-YYYY');
+
+    return {
+      minDate,
+      maxDate,
+      dateRange,
+      granularity,
+      commonFormats,
+      timePatterns: []
+    };
+  }
+
+  // 推断语义类型
+  private InferSemanticType(columnName: string, data: any[], dataType: string): any {
+    const name = columnName.toLowerCase();
+    let category = 'other';
+    let confidence = 0;
+    const possibleMeanings: string[] = [];
+
+    // 基于列名推断
+    if (name.includes('id') || name.includes('key') || name.includes('code')) {
+      category = 'identifier';
+      confidence = 0.8;
+      possibleMeanings.push('唯一标识符');
+    } else if (name.includes('date') || name.includes('time') || dataType === 'date') {
+      category = 'date';
+      confidence = 0.9;
+      possibleMeanings.push('时间维度');
+    } else if (name.includes('amount') || name.includes('price') || name.includes('cost') || name.includes('value')) {
+      category = 'measure';
+      confidence = 0.7;
+      possibleMeanings.push('金额度量');
+    } else if (name.includes('count') || name.includes('number') || name.includes('qty') || name.includes('quantity')) {
+      category = 'measure';
+      confidence = 0.6;
+      possibleMeanings.push('数量度量');
+    } else if (name.includes('name') || name.includes('type') || name.includes('category') || name.includes('status')) {
+      category = 'dimension';
+      confidence = 0.7;
+      possibleMeanings.push('分类维度');
+    }
+
+    // 基于数据特征推断
+    if (dataType === 'string' && data.length > 0) {
+      const uniqueRate = new Set(data).size / data.length;
+      if (uniqueRate > 0.95) {
+        category = 'identifier';
+        confidence = Math.max(confidence, 0.6);
+        possibleMeanings.push('高唯一性标识');
+      } else if (uniqueRate < 0.1) {
+        category = 'dimension';
+        confidence = Math.max(confidence, 0.5);
+        possibleMeanings.push('低基数分类');
+      }
+    }
+
+    return {
+      category,
+      confidence,
+      possibleMeanings
+    };
+  }
+
+  // 生成统计信息
+  private GenerateStatistics(dataset: DataSet): any {
+    const numericColumns: ColumnStatistics[] = [];
+    const categoricalColumns: CategoryStatistics[] = [];
+    const dateColumns: DateStatistics[] = [];
+
+    dataset.columns.forEach(col => {
+      const columnData = dataset.rows.map(row => row[col.name]).filter(val => 
+        val !== null && val !== undefined && String(val).trim() !== ''
+      );
+
+      if (col.type === 'number') {
+        const stats = this.CalculateNumericStats(columnData);
+        if (stats) {
+          numericColumns.push({
+            name: col.name,
+            min: stats.min,
+            max: stats.max,
+            mean: stats.mean,
+            median: stats.median,
+            std: stats.std,
+            quartiles: stats.quartiles,
+            distribution: this.InferDistribution(columnData) as 'normal' | 'skewed' | 'uniform' | 'bimodal' | 'unknown',
+            outliers: []
+          });
+        }
+      } else if (col.type === 'string') {
+        const uniqueValues = new Set(columnData).size;
+        const valueCounts = new Map<string, number>();
+        columnData.forEach(val => {
+          const str = String(val);
+          valueCounts.set(str, (valueCounts.get(str) || 0) + 1);
+        });
+
+        const topValues = Array.from(valueCounts.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([value, count]) => ({
+            value,
+            count,
+            percentage: Math.round((count / columnData.length) * 100)
+          }));
+
+        categoricalColumns.push({
+          name: col.name,
+          uniqueValues,
+          topValues,
+          entropy: this.CalculateEntropy(Array.from(valueCounts.values())),
+          cardinality: uniqueValues < 10 ? 'low' : uniqueValues < 100 ? 'medium' : 'high'
+        });
+      } else if (col.type === 'date') {
+        const dateStats = this.CalculateDateStats(columnData);
+        if (dateStats) {
+          dateColumns.push({
+            name: col.name,
+            minDate: dateStats.minDate,
+            maxDate: dateStats.maxDate,
+            dateRange: dateStats.dateRange,
+            granularity: dateStats.granularity as any,
+            gaps: 0,
+            trends: []
+          });
+        }
+      }
+    });
+
+    return {
+      numericColumns,
+      categoricalColumns,
+      dateColumns
+    };
+  }
+
+  // 生成Excel元数据
+  private GenerateExcelMetadata(dataset: DataSet): any {
+    if (!dataset.sheets) return undefined;
+
+    const sheetsInfo: SheetMetadata[] = dataset.sheets.map((sheet, index) => ({
+      name: sheet.name,
+      index,
+      rows: sheet.rows.length,
+      columns: sheet.columns.length,
+      dataType: this.InferSheetDataType(sheet),
+      purpose: this.InferSheetPurpose(sheet),
+      keyColumns: this.FindKeyColumns(sheet.columns)
+    }));
+
+    const dataSourceDistribution = this.GetSheetDataStats(dataset);
+
+    return {
+      totalSheets: dataset.sheets.length,
+      sheetsInfo,
+      dataSourceDistribution,
+      crossSheetRelations: this.FindCrossSheetRelations(dataset.sheets)
+    };
+  }
+
+  // 生成数据预览
+  private GenerateDataPreview(dataset: DataSet): any {
+    const sampleSize = Math.min(5, dataset.rows.length);
+    const sampleRows = dataset.rows.slice(0, sampleSize);
+    
+    // 随机抽样
+    const randomIndices = Array.from({ length: Math.min(10, dataset.rows.length) }, () => 
+      Math.floor(Math.random() * dataset.rows.length)
+    );
+    const randomSample = randomIndices.map(i => dataset.rows[i]);
+    
+    // 代表性行（包含不同数据模式的行）
+    const representativeRows = this.SelectRepresentativeRows(dataset);
+
+    return {
+      sampleRows,
+      sampleSize,
+      randomSample,
+      representativeRows
+    };
+  }
+
+  // 推断业务语义
+  private InferBusinessSemantics(dataset: DataSet): any {
+    const possibleKeyColumns: string[] = [];
+    const possibleDateColumns: string[] = [];
+    const possibleCurrencyColumns: string[] = [];
+    const possibleCategoryColumns: string[] = [];
+
+    dataset.columns.forEach(col => {
+      const name = col.name.toLowerCase();
+      
+      if (col.unique || name.includes('id') || name.includes('key')) {
+        possibleKeyColumns.push(col.name);
+      }
+      
+      if (col.type === 'date' || name.includes('date') || name.includes('time')) {
+        possibleDateColumns.push(col.name);
+      }
+      
+      if (name.includes('price') || name.includes('cost') || name.includes('amount') || name.includes('value')) {
+        possibleCurrencyColumns.push(col.name);
+      }
+      
+      if (col.type === 'string' && !col.unique) {
+        possibleCategoryColumns.push(col.name);
+      }
+    });
+
+    const tableType = this.InferTableType(dataset);
+    const businessDomain = this.InferBusinessDomain(dataset);
+
+    return {
+      possibleKeyColumns,
+      possibleDateColumns,
+      possibleCurrencyColumns,
+      possibleCategoryColumns,
+      tableType,
+      businessDomain
+    };
+  }
+
+  // 生成可视化建议
+  private GenerateVisualizationSuggestions(dataset: DataSet): any {
+    const recommendedChartTypes: string[] = [];
+    const keyColumns: string[] = [];
+    const trends: string[] = [];
+    const correlations: string[] = [];
+
+    const numericCols = dataset.columns.filter(col => col.type === 'number');
+    const dateCols = dataset.columns.filter(col => col.type === 'date');
+    const categoryCols = dataset.columns.filter(col => col.type === 'string' && !col.unique);
+
+    // 基于数据特征推荐图表类型
+    if (dateCols.length > 0 && numericCols.length > 0) {
+      recommendedChartTypes.push('line', 'area');
+      trends.push('时间序列分析');
+    }
+
+    if (categoryCols.length > 0 && numericCols.length > 0) {
+      recommendedChartTypes.push('bar', 'column');
+    }
+
+    if (categoryCols.length > 0) {
+      recommendedChartTypes.push('pie', 'doughnut');
+    }
+
+    if (numericCols.length >= 2) {
+      recommendedChartTypes.push('scatter');
+      correlations.push('数值相关性分析');
+    }
+
+    // 识别关键列
+    keyColumns.push(...dataset.columns.filter(col => col.unique).map(col => col.name));
+    keyColumns.push(...dateCols.map(col => col.name));
+    keyColumns.push(...numericCols.slice(0, 3).map(col => col.name));
+
+    return {
+      recommendedChartTypes: [...new Set(recommendedChartTypes)],
+      keyColumns: [...new Set(keyColumns)],
+      trends,
+      correlations
+    };
+  }
+
+  // 分析数据质量
+  private AnalyzeDataQuality(dataset: DataSet): any {
+    const totalCells = dataset.rows.length * dataset.columns.length;
+    let filledCells = 0;
+    let emptyCells = 0;
+    const issues: DataQualityIssue[] = [];
+
+    // 计算完整性
+    dataset.rows.forEach(row => {
+      dataset.columns.forEach(col => {
+        const value = row[col.name];
+        if (value !== null && value !== undefined && String(value).trim() !== '') {
+          filledCells++;
+        } else {
+          emptyCells++;
+        }
+      });
+    });
+
+    const completenessRate = Math.round((filledCells / totalCells) * 100);
+
+    // 检查重复行
+    const rowStrings = dataset.rows.map(row => JSON.stringify(row));
+    const uniqueRows = new Set(rowStrings).size;
+    const duplicateRows = dataset.rows.length - uniqueRows;
+    const duplicateRate = Math.round((duplicateRows / dataset.rows.length) * 100);
+
+    // 检查数据质量问题
+    if (emptyCells > totalCells * 0.1) {
+      issues.push({
+        type: 'missing_values',
+        description: `数据集中有 ${emptyCells} 个空值，占总数据的 ${Math.round((emptyCells / totalCells) * 100)}%`,
+        count: emptyCells,
+        severity: emptyCells > totalCells * 0.3 ? 'high' : 'medium',
+        examples: []
+      });
+    }
+
+    if (duplicateRows > 0) {
+      issues.push({
+        type: 'duplicates',
+        description: `发现 ${duplicateRows} 行重复数据`,
+        count: duplicateRows,
+        severity: duplicateRows > dataset.rows.length * 0.1 ? 'high' : 'low',
+        examples: []
+      });
+    }
+
+    // 计算质量分数
+    let score = 100;
+    score -= Math.min(30, (emptyCells / totalCells) * 100);
+    score -= Math.min(20, duplicateRate);
+    score = Math.max(0, Math.round(score));
+
+    return {
+      completeness: {
+        totalCells,
+        filledCells,
+        emptyCells,
+        completenessRate
+      },
+      uniqueness: {
+        totalRows: dataset.rows.length,
+        uniqueRows,
+        duplicateRows,
+        duplicateRate
+      },
+      consistency: {
+        issues,
+        score
+      }
+    };
+  }
+
+  // 辅助方法
+  private FormatFileSize(bytes: number): string {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    if (bytes === 0) return '0 Bytes';
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  private GetFileType(fileName: string): string {
+    const ext = this.GetFileExtension(fileName);
+    const types: Record<string, string> = {
+      '.csv': 'text/csv',
+      '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xls': 'application/vnd.ms-excel'
+    };
+    return types[ext] || 'unknown';
+  }
+
+  private EstimateMemoryUsage(rows: any[], columns: ColumnInfo[]): number {
+    let totalSize = 0;
+    rows.forEach(row => {
+      columns.forEach(col => {
+        const value = row[col.name];
+        if (value !== null && value !== undefined) {
+          totalSize += String(value).length * 2;
+        }
+      });
+    });
+    return totalSize;
+  }
+
+  private InferDistribution(data: number[]): string {
+    const numbers = data.map(Number).filter(n => !isNaN(n));
+    if (numbers.length < 10) return 'unknown';
+    
+    numbers.sort((a, b) => a - b);
+    const mean = numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+    const median = numbers[Math.floor(numbers.length / 2)];
+    
+    if (Math.abs(mean - median) < (numbers[numbers.length - 1] - numbers[0]) * 0.1) {
+      return 'normal';
+    }
+    return 'skewed';
+  }
+
+  private CalculateEntropy(frequencies: number[]): number {
+    const total = frequencies.reduce((sum, freq) => sum + freq, 0);
+    if (total === 0) return 0;
+    
+    return -frequencies
+      .map(freq => freq / total)
+      .filter(p => p > 0)
+      .reduce((entropy, p) => entropy + p * Math.log2(p), 0);
+  }
+
+  private InferSheetDataType(sheet: SheetInfo): string {
+    const numericRatio = sheet.columns.filter(col => col.type === 'number').length / sheet.columns.length;
+    if (numericRatio > 0.7) return 'numeric';
+    if (numericRatio > 0.3) return 'mixed';
+    return 'categorical';
+  }
+
+  private InferSheetPurpose(sheet: SheetInfo): string {
+    const name = sheet.name.toLowerCase();
+    if (name.includes('summary') || name.includes('total')) return 'summary';
+    if (name.includes('detail') || name.includes('raw')) return 'detail';
+    if (name.includes('config') || name.includes('setting')) return 'configuration';
+    return 'data';
+  }
+
+  private FindKeyColumns(columns: ColumnInfo[]): string[] {
+    return columns
+      .filter(col => col.unique || col.name.toLowerCase().includes('id'))
+      .map(col => col.name);
+  }
+
+  private FindCrossSheetRelations(sheets: SheetInfo[]): string[] {
+    const relations: string[] = [];
+    const allColumns = new Set<string>();
+    
+    sheets.forEach(sheet => {
+      sheet.columns.forEach(col => allColumns.add(col.name));
+    });
+
+    const commonColumns = Array.from(allColumns).filter(colName => {
+      const sheetsWithColumn = sheets.filter(sheet => 
+        sheet.columns.some(col => col.name === colName)
+      );
+      return sheetsWithColumn.length > 1;
+    });
+
+    commonColumns.forEach(colName => {
+      relations.push(`列 "${colName}" 出现在多个工作表中，可能是关联字段`);
+    });
+
+    return relations;
+  }
+
+  private SelectRepresentativeRows(dataset: DataSet): any[] {
+    const rows = dataset.rows;
+    if (rows.length <= 5) return rows;
+
+    const representatives: any[] = [];
+    representatives.push(rows[0]);
+    representatives.push(rows[Math.floor(rows.length / 2)]);
+    representatives.push(rows[rows.length - 1]);
+    
+    const randomIndices = Array.from({ length: 2 }, () => 
+      Math.floor(Math.random() * rows.length)
+    );
+    randomIndices.forEach(i => representatives.push(rows[i]));
+
+    return representatives;
+  }
+
+  private InferTableType(dataset: DataSet): string {
+    const hasUniqueKey = dataset.columns.some(col => col.unique);
+    const hasDateColumn = dataset.columns.some(col => col.type === 'date');
+    const numericRatio = dataset.columns.filter(col => col.type === 'number').length / dataset.columns.length;
+
+    if (hasUniqueKey && hasDateColumn && numericRatio > 0.3) {
+      return 'transactional';
+    } else if (numericRatio > 0.6) {
+      return 'analytical';
+    } else if (hasUniqueKey && !hasDateColumn) {
+      return 'master';
+    } else if (dataset.rows.length < 100 && numericRatio < 0.3) {
+      return 'reference';
+    }
+    
+    return 'unknown';
+  }
+
+  private InferBusinessDomain(dataset: DataSet): string[] {
+    const domains: string[] = [];
+    const columnNames = dataset.columns.map(col => col.name.toLowerCase()).join(' ');
+
+    const domainKeywords = {
+      sales: ['sales', 'revenue', 'customer', 'order', 'product'],
+      finance: ['amount', 'cost', 'price', 'budget', 'expense'],
+      marketing: ['campaign', 'lead', 'conversion', 'click', 'impression'],
+      hr: ['employee', 'salary', 'department', 'position', 'hire'],
+      operations: ['process', 'workflow', 'status', 'task', 'project'],
+      inventory: ['stock', 'quantity', 'warehouse', 'item', 'supplier']
+    };
+
+    Object.entries(domainKeywords).forEach(([domain, keywords]) => {
+      if (keywords.some(keyword => columnNames.includes(keyword))) {
+        domains.push(domain);
+      }
+    });
+
+    return domains.length > 0 ? domains : ['unknown'];
   }
 }
 
