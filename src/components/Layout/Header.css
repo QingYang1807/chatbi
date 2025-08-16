@@ -1,0 +1,110 @@
+/* 顶部导航样式 */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: linear-gradient(90deg, #1677ff 0%, #1890ff 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sidebar-trigger {
+  color: #fff !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.sidebar-trigger:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1;
+  margin-top: -4px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.status-dot.status-success {
+  background: #52c41a;
+}
+
+.status-dot.status-error {
+  background: #ff4d4f;
+}
+
+.status-dot.status-default {
+  background: #d9d9d9;
+}
+
+.status-text {
+  font-size: 11px;
+}
+
+.header-button {
+  color: #fff !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.header-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.notification-item {
+  max-width: 300px;
+  padding: 4px 0;
+}
+
+.notification-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.notification-message {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: #999;
+}

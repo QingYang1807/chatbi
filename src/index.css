@@ -1,0 +1,135 @@
+/* 全局样式 */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fafafa;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* 防止选中文本时出现蓝色背景 */
+::selection {
+  background-color: #bae7ff;
+  color: #1677ff;
+}
+
+/* 链接样式 */
+a {
+  color: #1677ff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #0958d9;
+}
+
+/* 代码样式 */
+code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background-color: #f6f8fa;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* 表格样式优化 */
+.ant-table-thead > tr > th {
+  background-color: #fafafa !important;
+  font-weight: 600 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #f0f8ff !important;
+}
+
+/* 卡片样式优化 */
+.ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fafafa;
+}
+
+.ant-card-body {
+  padding: 16px;
+}
+
+/* 按钮样式优化 */
+.ant-btn-primary {
+  background-color: #1677ff;
+  border-color: #1677ff;
+}
+
+.ant-btn-primary:hover {
+  background-color: #0958d9;
+  border-color: #0958d9;
+}
+
+/* 输入框样式优化 */
+.ant-input:focus,
+.ant-input-focused {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+/* 消息样式 */
+.ant-message {
+  z-index: 9999;
+}
+
+/* 模态框样式 */
+.ant-modal {
+  top: 50px;
+}
+
+.ant-modal-header {
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 加载动画 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* 工具提示样式 */
+.ant-tooltip-inner {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-size: 12px;
+}
+
+/* 通知样式 */
+.ant-notification {
+  z-index: 9999;
+}
+
+/* 禁用选择 */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 文本省略 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,22 @@
+/* 偏好设置样式 */
+
+.preferences-panel {
+  padding: 16px;
+}
+
+.preferences-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.preference-section {
+  margin-bottom: 24px;
+}
+
+.preference-section .ant-typography h5 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #333;
+}

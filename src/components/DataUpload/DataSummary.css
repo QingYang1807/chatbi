@@ -1,0 +1,95 @@
+/* 数据摘要样式 */
+
+.data-summary {
+  margin-top: 16px;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quality-section {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.quality-section h4 {
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.quality-details {
+  margin-top: 16px;
+  text-align: left;
+  display: inline-block;
+}
+
+.quality-details p {
+  margin: 4px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.columns-section {
+  margin: 24px 0;
+}
+
+.columns-section h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.columns-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.column-item {
+  padding: 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.column-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.column-meta {
+  margin-bottom: 8px;
+}
+
+.column-examples {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.column-examples span {
+  font-size: 12px;
+  color: #666;
+}
+
+.stats-section {
+  margin: 24px 0;
+}
+
+.stats-section h4 {
+  margin-bottom: 12px;
+  color: #333;
+}

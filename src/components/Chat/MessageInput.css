@@ -1,0 +1,61 @@
+/* 消息输入样式 */
+
+.message-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #52c41a;
+  padding: 4px 0;
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 8px;
+  transition: border-color 0.3s;
+}
+
+.input-container:focus-within {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+.input-textarea {
+  flex: 1;
+  border: none !important;
+  box-shadow: none !important;
+  resize: none;
+  padding: 0;
+}
+
+.input-textarea:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.input-actions {
+  display: flex;
+  align-items: flex-end;
+}
+
+.input-hint {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+  padding: 4px 8px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid #1677ff;
+}

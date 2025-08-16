@@ -1,0 +1,7 @@
+/* 消息列表样式 */
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

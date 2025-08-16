@@ -1,0 +1,27 @@
+/* 数据预览样式 */
+
+.data-preview {
+  margin-bottom: 16px;
+}
+
+.preview-card {
+  transition: all 0.3s ease;
+  border: 1px solid #d9d9d9;
+}
+
+.preview-card.active {
+  border-color: #1677ff;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);
+}
+
+.preview-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.preview-card.active .ant-card-head {
+  background: #f0f8ff;
+}

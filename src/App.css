@@ -1,0 +1,93 @@
+/* 主应用样式 */
+
+.app-layout {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.app-body {
+  min-height: calc(100vh - 64px);
+}
+
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.app-loading p {
+  margin-top: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* 全局样式覆盖 */
+.ant-layout-header {
+  height: 64px;
+  line-height: 64px;
+}
+
+.ant-layout-sider {
+  background: #fff !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+}
+
+.ant-card {
+  border-radius: 8px;
+}
+
+.ant-btn {
+  border-radius: 6px;
+}
+
+.ant-input {
+  border-radius: 6px;
+}
+
+.ant-select-selector {
+  border-radius: 6px !important;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  .ant-layout-sider {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    flex: none !important;
+  }
+  
+  .main-content {
+    padding: 8px;
+  }
+}

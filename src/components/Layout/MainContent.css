@@ -1,0 +1,29 @@
+/* 主内容区域样式 */
+
+.main-content {
+  background: #fafafa;
+  min-height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.data-page {
+  padding: 16px;
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.datasets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}

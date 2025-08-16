@@ -1,0 +1,68 @@
+/* 模型配置样式 */
+
+.model-config {
+  padding: 16px;
+}
+
+.config-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.model-status {
+  margin-bottom: 24px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+.api-key-section {
+  margin-bottom: 24px;
+}
+
+.api-key-actions {
+  margin: 12px 0;
+}
+
+.api-key-help {
+  margin-top: 8px;
+}
+
+.model-selection {
+  margin-bottom: 24px;
+}
+
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.model-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.model-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.model-card.selected {
+  border-color: #1677ff;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);
+}
+
+.model-card.selected .ant-card-head {
+  background: #f0f8ff;
+}
+
+.model-meta {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.advanced-config {
+  margin-bottom: 24px;
+}

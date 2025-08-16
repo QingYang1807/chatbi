@@ -1,0 +1,29 @@
+/* 图表渲染样式 */
+
+.chart-renderer {
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chart-renderer .ant-card-head {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.chart-renderer .ant-card-head-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.chart-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
