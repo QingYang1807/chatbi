@@ -76,6 +76,22 @@
   padding-left: 16px;
 }
 
+/* 删除按钮样式优化 */
+.dataset-delete-btn {
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.dataset-item:hover .dataset-delete-btn {
+  opacity: 0.7 !important;
+}
+
+.dataset-delete-btn:hover {
+  opacity: 1 !important;
+  background-color: rgba(255, 77, 79, 0.1) !important;
+  border-color: transparent !important;
+}
+
 .empty-datasets {
   text-align: center;
   padding: 16px 8px;

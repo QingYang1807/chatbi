@@ -143,11 +143,55 @@ class AIService {
 - 当数据适合可视化时，建议具体的图表类型
 - 用中文回答`;
 
-    if (context.currentDataset) {
+    if (context.currentDatasetData) {
+      const dataset = context.currentDatasetData;
+      console.log('🤖 AI服务接收到数据集信息:', {
+        name: dataset.name,
+        rows: dataset.summary.totalRows,
+        columns: dataset.summary.totalColumns
+      });
+      
+      // 构建数据集信息
       prompt += `
 
-当前分析的数据集：${context.currentDataset}
-请基于这个数据集回答用户的问题。`;
+当前分析的数据集：${dataset.name}
+数据集概览：
+- 总行数：${dataset.summary.totalRows}
+- 总列数：${dataset.summary.totalColumns}
+- 数值列：${dataset.summary.numericColumns}个
+- 文本列：${dataset.summary.stringColumns}个
+- 日期列：${dataset.summary.dateColumns}个
+
+数据字段信息：`;
+
+      // 添加字段详情
+      dataset.columns.forEach((col: any) => {
+        prompt += `
+- ${col.name}（${this.GetColumnTypeName(col.type)}）`;
+        if (col.examples && col.examples.length > 0) {
+          prompt += `，示例值：${col.examples.slice(0, 3).join('、')}`;
+        }
+      });
+
+      // 添加数据样本
+      if (dataset.rows && dataset.rows.length > 0) {
+        prompt += `
+
+数据样本（前5行）：`;
+        const sampleRows = dataset.rows.slice(0, 5);
+        sampleRows.forEach((row: any, index: number) => {
+          prompt += `
+第${index + 1}行：`;
+          dataset.columns.forEach((col: any) => {
+            const value = row[col.name];
+            prompt += ` ${col.name}=${value}`;
+          });
+        });
+      }
+
+      prompt += `
+
+请基于以上数据集信息回答用户的问题，进行数据分析。`;
     }
 
     if (options?.suggestCharts) {
@@ -332,6 +376,17 @@ data: 相关数据字段
     };
 
     return modelInfo[model];
+  }
+
+  // 获取数据类型的中文名称
+  private GetColumnTypeName(type: string): string {
+    const typeNames: Record<string, string> = {
+      string: '文本',
+      number: '数值',
+      date: '日期',
+      boolean: '布尔',
+    };
+    return typeNames[type] || type;
   }
 }
 

@@ -33,6 +33,7 @@ export interface ChartData {
 export interface ChatContext {
   messages: ChatMessage[];
   currentDataset?: string;
+  currentDatasetData?: any; // 包含实际的数据集对象
   sessionId: string;
 }
 

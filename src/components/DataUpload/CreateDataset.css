@@ -1,0 +1,269 @@
+/* 创建数据集组件样式 */
+
+.create-dataset {
+  padding: 20px 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 步骤指示器样式 */
+.create-steps {
+  margin-bottom: 32px;
+  padding: 0 20px;
+}
+
+.create-steps .ant-steps-item-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.create-steps .ant-steps-item-description {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 步骤内容区域 */
+.step-content {
+  min-height: 300px;
+  padding: 0 8px;
+}
+
+/* 表单样式 */
+.create-form {
+  padding: 16px;
+}
+
+.create-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.create-form .ant-form-item-label > label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.create-form .ant-input,
+.create-form .ant-input.ant-input-lg {
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.create-form .ant-input:focus,
+.create-form .ant-input-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 确认页面样式 */
+.confirm-content {
+  padding: 16px;
+}
+
+.confirm-card,
+.default-config {
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.confirm-card .ant-card-head-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.confirm-item {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.confirm-item .ant-typography:first-child {
+  min-width: 100px;
+  margin-right: 12px;
+}
+
+.default-config ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.default-config li {
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 13px;
+}
+
+/* 成功页面样式 */
+.success-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.success-icon {
+  margin-bottom: 20px;
+}
+
+.success-content .ant-typography-h3 {
+  margin-bottom: 12px;
+  color: #52c41a;
+}
+
+.success-content .ant-typography {
+  font-size: 14px;
+}
+
+/* 按钮样式 */
+.create-dataset .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.create-dataset .ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.create-dataset .ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* 加载状态 */
+.create-dataset .ant-btn-loading {
+  pointer-events: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .create-dataset {
+    padding: 16px 0;
+  }
+  
+  .create-steps {
+    padding: 0 12px;
+    margin-bottom: 24px;
+  }
+  
+  .step-content {
+    min-height: 250px;
+    padding: 0 4px;
+  }
+  
+  .create-form {
+    padding: 12px;
+  }
+  
+  .confirm-content {
+    padding: 12px;
+  }
+  
+  .success-content {
+    padding: 30px 16px;
+  }
+  
+  .confirm-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .confirm-item .ant-typography:first-child {
+    min-width: auto;
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+}
+
+/* 表单验证样式 */
+.create-form .ant-form-item-has-error .ant-input {
+  border-color: #ff4d4f;
+}
+
+.create-form .ant-form-item-explain-error {
+  font-size: 12px;
+  color: #ff4d4f;
+}
+
+/* 字符计数样式 */
+.create-form .ant-input-show-count-suffix {
+  color: #999;
+  font-size: 12px;
+}
+
+/* 禁用状态 */
+.create-dataset .ant-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 步骤完成状态 */
+.create-steps .ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #52c41a;
+  border-color: #52c41a;
+}
+
+.create-steps .ant-steps-item-finish .ant-steps-item-title {
+  color: #52c41a;
+}
+
+/* 当前步骤状态 */
+.create-steps .ant-steps-item-process .ant-steps-item-icon {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.create-steps .ant-steps-item-process .ant-steps-item-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* 等待步骤状态 */
+.create-steps .ant-steps-item-wait .ant-steps-item-icon {
+  background-color: #fff;
+  border-color: #d9d9d9;
+}
+
+.create-steps .ant-steps-item-wait .ant-steps-item-title {
+  color: #999;
+}
+
+/* 动画效果 */
+.step-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 成功图标动画 */
+.success-icon .anticon {
+  animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

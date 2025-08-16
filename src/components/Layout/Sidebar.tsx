@@ -1,14 +1,15 @@
 // 侧边栏导航组件
 
 import React from 'react';
-import { Layout, Menu, Space, Typography, Card, Button } from 'antd';
+import { Layout, Menu, Space, Typography, Card, Button, Popconfirm, message } from 'antd';
 import { 
   MessageOutlined, 
   DatabaseOutlined, 
   BarChartOutlined, 
   UploadOutlined,
   FileTextOutlined,
-  PlusOutlined
+  PlusOutlined,
+  DeleteOutlined
 } from '@ant-design/icons';
 import { useUIStore, useDataStore } from '../../stores';
 import './Sidebar.css';
@@ -24,7 +25,7 @@ const Sidebar: React.FC = () => {
     ShowDataUploadModal 
   } = useUIStore();
   
-  const { datasets, activeDataset } = useDataStore();
+  const { datasets, activeDataset, DeleteDataset, SelectDataset } = useDataStore();
 
   const menuItems = [
     {
@@ -50,6 +51,20 @@ const Sidebar: React.FC = () => {
 
   const HandleUploadClick = () => {
     ShowDataUploadModal();
+  };
+
+  const HandleDatasetClick = (datasetId: string) => {
+    SelectDataset(datasetId);
+  };
+
+  const HandleDeleteDataset = async (datasetId: string, datasetName: string) => {
+    try {
+      await DeleteDataset(datasetId);
+      message.success(`数据集 "${datasetName}" 已删除`);
+    } catch (error) {
+      console.error('删除数据集失败:', error);
+      message.error('删除失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    }
   };
 
   return (
@@ -120,6 +135,8 @@ const Sidebar: React.FC = () => {
                         activeDataset?.id === dataset.id ? 'active' : ''
                       }`}
                       bodyStyle={{ padding: '8px 12px' }}
+                      onClick={() => HandleDatasetClick(dataset.id)}
+                      style={{ cursor: 'pointer' }}
                     >
                       <div className="dataset-header">
                         <FileTextOutlined style={{ color: '#1677ff' }} />
@@ -136,9 +153,45 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </div>
                       <div className="dataset-meta">
-                        <Text type="secondary" style={{ fontSize: 11 }}>
-                          {dataset.summary.totalRows} 行 · {dataset.summary.totalColumns} 列
-                        </Text>
+                        <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
+                          <Text type="secondary" style={{ fontSize: 11 }}>
+                            {dataset.summary.totalRows} 行 · {dataset.summary.totalColumns} 列
+                          </Text>
+                          <Popconfirm
+                            title="确认删除数据集？"
+                            description={
+                              <div>
+                                <p>数据集名称：{dataset.name}</p>
+                                <p>包含数据：{dataset.summary.totalRows} 行 {dataset.summary.totalColumns} 列</p>
+                                <p style={{ color: '#ff4d4f', fontWeight: 'bold' }}>删除后无法恢复，请谨慎操作！</p>
+                              </div>
+                            }
+                            onConfirm={(e) => {
+                              e?.stopPropagation();
+                              HandleDeleteDataset(dataset.id, dataset.name);
+                            }}
+                            onCancel={(e) => e?.stopPropagation()}
+                            okText="确认删除"
+                            cancelText="取消"
+                            okType="danger"
+                            placement="topRight"
+                          >
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<DeleteOutlined />}
+                              onClick={(e) => e.stopPropagation()}
+                              style={{ 
+                                color: '#ff4d4f',
+                                opacity: 0.7,
+                                minWidth: '20px',
+                                height: '20px',
+                                padding: '0 4px'
+                              }}
+                              className="dataset-delete-btn"
+                            />
+                          </Popconfirm>
+                        </Space>
                       </div>
                     </Card>
                   ))

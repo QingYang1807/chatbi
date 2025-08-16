@@ -17,6 +17,7 @@ interface ChatState {
   AddMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   SendMessage: (content: string) => Promise<void>;
   ClearChat: () => void;
+  ClearMessages: () => void;
   LoadChatHistory: () => Promise<void>;
   SaveChatHistory: () => Promise<void>;
   SetCurrentDataset: (datasetId?: string) => void;
@@ -58,10 +59,19 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ isLoading: true, error: undefined });
 
     try {
+      // 获取当前数据集的完整信息
+      let currentDatasetData = null;
+      if (state.currentDataset) {
+        // 这里需要从dataStore获取完整的数据集信息
+        const dataStore = await import('../stores/dataStore');
+        currentDatasetData = dataStore.useDataStore.getState().GetDatasetById(state.currentDataset);
+      }
+
       // 构建聊天上下文
       const context: ChatContext = {
         messages: state.messages,
         currentDataset: state.currentDataset,
+        currentDatasetData: currentDatasetData,
         sessionId: state.sessionId,
       };
 
@@ -117,6 +127,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
       messages: [],
       error: undefined,
       sessionId: uuidv4(),
+    });
+
+    // 清除存储的聊天历史
+    get().SaveChatHistory();
+  },
+
+  ClearMessages: () => {
+    set({
+      messages: [],
+      error: undefined,
     });
 
     // 清除存储的聊天历史

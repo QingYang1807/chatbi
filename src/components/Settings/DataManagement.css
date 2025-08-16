@@ -1,0 +1,119 @@
+/* 数据管理组件样式 */
+
+.data-management {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.management-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.management-card .ant-card-head-title {
+  font-weight: 600;
+}
+
+.management-card .ant-card-body {
+  padding: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.empty-state .anticon {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.dataset-item {
+  transition: background-color 0.2s;
+}
+
+.dataset-item:hover {
+  background-color: #fafafa;
+}
+
+.dataset-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dataset-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.backup-section {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.danger-zone {
+  border: 1px solid #ff4d4f;
+  border-radius: 6px;
+  padding: 16px;
+  background: #fff2f0;
+}
+
+.danger-zone .ant-typography {
+  margin-bottom: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .data-management {
+    padding: 16px;
+  }
+  
+  .management-card .ant-card-body {
+    padding: 16px;
+  }
+  
+  .dataset-stats {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+/* 加载状态 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* 文件上传区域 */
+.upload-area {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.upload-area:hover {
+  border-color: #1890ff;
+}
+
+.upload-area.dragover {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}

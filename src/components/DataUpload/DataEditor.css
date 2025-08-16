@@ -1,0 +1,246 @@
+/* 数据编辑器组件样式 */
+
+.data-editor {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.editor-toolbar {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
+}
+
+.editable-table {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.editable-table .ant-table-thead > tr > th {
+  background: #f5f5f5;
+  font-weight: 600;
+  padding: 8px;
+}
+
+.editable-table .ant-table-tbody > tr > td {
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.editable-table .ant-table-tbody > tr:hover > td {
+  background: #f0f8ff;
+}
+
+/* 列标题样式 */
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.column-actions {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.column-header:hover .column-actions {
+  opacity: 1;
+}
+
+/* 可编辑单元格样式 */
+.editable-cell {
+  min-height: 32px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.editable-cell:hover {
+  background: #e6f7ff;
+  border: 1px dashed #1890ff;
+}
+
+.editing-cell {
+  position: relative;
+}
+
+.cell-actions {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  padding: 2px;
+}
+
+/* 编辑状态样式 */
+.editing-cell .ant-input,
+.editing-cell .ant-select {
+  border: 2px solid #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 操作按钮样式 */
+.data-editor .ant-btn-dangerous {
+  border-color: #ff7875;
+  color: #ff7875;
+}
+
+.data-editor .ant-btn-dangerous:hover {
+  background: #fff2f0;
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+/* 表格操作列样式 */
+.editable-table .ant-table-tbody tr td:first-child {
+  background: #fafafa !important;
+  text-align: center;
+  cursor: default;
+}
+
+.editable-table .ant-table-tbody tr:hover td:first-child {
+  background: #f0f0f0 !important;
+}
+
+/* 模态框样式 */
+.data-editor .ant-modal-body {
+  padding: 20px;
+}
+
+.data-editor .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.data-editor .ant-form-item-label > label {
+  font-weight: 500;
+}
+
+/* 工具提示样式 */
+.data-editor .ant-tooltip-inner {
+  font-size: 12px;
+}
+
+/* 标签样式 */
+.data-editor .ant-tag {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin: 0 2px;
+}
+
+/* 空数据样式 */
+.data-editor .ant-empty {
+  margin: 40px 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .data-editor {
+    padding: 8px;
+  }
+  
+  .editor-toolbar {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .column-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .column-actions {
+    opacity: 1;
+  }
+  
+  .editable-table .ant-table-tbody > tr > td {
+    padding: 2px 4px;
+  }
+}
+
+/* 滚动条样式 */
+.data-editor .ant-table-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.data-editor .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.data-editor .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.data-editor .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 加载状态 */
+.data-editor .ant-spin-container {
+  min-height: 200px;
+}
+
+/* 错误状态 */
+.data-editor .error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 成功状态 */
+.data-editor .success-message {
+  color: #52c41a;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 编辑指示器 */
+.editable-cell::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-top: 4px solid #d9d9d9;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.editable-cell:hover::after {
+  opacity: 1;
+  border-top-color: #1890ff;
+}
+
+/* 数据类型指示器 */
+.data-editor .type-indicator {
+  font-size: 10px;
+  color: #999;
+  margin-left: 4px;
+}
+
+/* 验证错误样式 */
+.data-editor .validation-error {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+}
+
+.data-editor .validation-error-message {
+  color: #ff4d4f;
+  font-size: 11px;
+  margin-top: 2px;
+}

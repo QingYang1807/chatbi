@@ -1,11 +1,12 @@
 // 数据预览组件
 
 import React, { useState, useMemo } from 'react';
-import { Table, Card, Space, Tag, Statistic, Row, Col, Button, Tooltip } from 'antd';
-import { EyeOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Table, Card, Space, Tag, Statistic, Row, Col, Button, Tooltip, Popconfirm, message, Select, Divider } from 'antd';
+import { EyeOutlined, DeleteOutlined, DownloadOutlined, InfoCircleOutlined, FileExcelOutlined, SwapOutlined } from '@ant-design/icons';
 import { DataSet, ColumnInfo } from '../../types';
 import { useDataStore } from '../../stores';
 import DataSummary from './DataSummary';
+import DatasetDetails from './DatasetDetails';
 import './DataPreview.css';
 
 interface DataPreviewProps {
@@ -14,11 +15,14 @@ interface DataPreviewProps {
 }
 
 const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
-  const { SelectDataset, DeleteDataset, activeDataset } = useDataStore();
+  const { SelectDataset, DeleteDataset, activeDataset, SwitchSheet, GetSheetNames } = useDataStore();
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDetails, setShowDetails] = useState(false);
 
   const isActive = activeDataset?.id === dataset.id;
+  const sheetNames = GetSheetNames(dataset.id);
+  const hasMultipleSheets = dataset.sheets && dataset.sheets.length > 1;
 
   // 生成表格列配置
   const columns = useMemo(() => {
@@ -84,8 +88,25 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
     SelectDataset(dataset.id);
   };
 
-  const HandleDelete = () => {
-    DeleteDataset(dataset.id);
+  const HandleDelete = async () => {
+    try {
+      await DeleteDataset(dataset.id);
+      message.success(`数据集 "${dataset.name}" 已删除`);
+    } catch (error) {
+      console.error('删除数据集失败:', error);
+      message.error('删除失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    }
+  };
+
+  const HandleSheetChange = async (sheetIndex: number) => {
+    try {
+      console.log('🔄 用户切换工作表:', sheetIndex);
+      await SwitchSheet(dataset.id, sheetIndex);
+      message.success(`已切换到工作表 "${sheetNames[sheetIndex]}"`);
+    } catch (error) {
+      console.error('切换工作表失败:', error);
+      message.error('切换工作表失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    }
   };
 
   const HandleDownload = () => {
@@ -126,6 +147,15 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
           <Space>
             <span>{dataset.name}</span>
             {isActive && <Tag color="success">当前数据集</Tag>}
+            {hasMultipleSheets && (
+              <>
+                <Divider type="vertical" />
+                <FileExcelOutlined style={{ color: '#1677ff' }} />
+                <span style={{ color: '#666', fontSize: '12px' }}>
+                  {dataset.sheets!.length} 个工作表
+                </span>
+              </>
+            )}
           </Space>
         }
         extra={
@@ -141,22 +171,85 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
             </Button>
             <Button
               size="small"
+              icon={<InfoCircleOutlined />}
+              onClick={() => setShowDetails(true)}
+            >
+              详情
+            </Button>
+            <Button
+              size="small"
               icon={<DownloadOutlined />}
               onClick={HandleDownload}
             >
               导出
             </Button>
-            <Button
-              size="small"
-              icon={<DeleteOutlined />}
-              danger
-              onClick={HandleDelete}
+            <Popconfirm
+              title="确认删除数据集？"
+              description={
+                <div>
+                  <p>数据集名称：{dataset.name}</p>
+                  <p>包含数据：{dataset.summary.totalRows} 行 {dataset.summary.totalColumns} 列</p>
+                  <p style={{ color: '#ff4d4f', fontWeight: 'bold' }}>删除后无法恢复，请谨慎操作！</p>
+                </div>
+              }
+              onConfirm={HandleDelete}
+              okText="确认删除"
+              cancelText="取消"
+              okType="danger"
             >
-              删除
-            </Button>
+              <Button
+                size="small"
+                icon={<DeleteOutlined />}
+                danger
+              >
+                删除
+              </Button>
+            </Popconfirm>
           </Space>
         }
       >
+        {/* 工作表选择器 */}
+        {hasMultipleSheets && (
+          <Card size="small" style={{ marginBottom: 16, backgroundColor: '#f8f9fa' }}>
+            <Row align="middle" gutter={16}>
+              <Col>
+                <Space>
+                  <SwapOutlined style={{ color: '#1677ff' }} />
+                  <span style={{ fontWeight: 500 }}>工作表选择：</span>
+                </Space>
+              </Col>
+              <Col flex="auto">
+                <Select
+                  value={dataset.activeSheetIndex || 0}
+                  onChange={HandleSheetChange}
+                  style={{ width: '200px' }}
+                  size="small"
+                >
+                  {sheetNames.map((sheetName, index) => (
+                    <Select.Option key={index} value={index}>
+                      <Space>
+                        <FileExcelOutlined style={{ color: '#1677ff' }} />
+                        {sheetName}
+                        {index === (dataset.activeSheetIndex || 0) && (
+                          <Tag color="blue" size="small">当前</Tag>
+                        )}
+                      </Space>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Col>
+              <Col>
+                <Tooltip title="当前工作表信息">
+                  <Space size="small" style={{ color: '#666', fontSize: '12px' }}>
+                    <span>第 {(dataset.activeSheetIndex || 0) + 1} 页</span>
+                    <span>共 {sheetNames.length} 页</span>
+                  </Space>
+                </Tooltip>
+              </Col>
+            </Row>
+          </Card>
+        )}
+        
         {/* 数据概览 */}
         <Row gutter={16} style={{ marginBottom: 16 }}>
           <Col span={6}>
@@ -172,6 +265,30 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
             <Statistic title="文本列" value={dataset.summary.stringColumns} />
           </Col>
         </Row>
+        
+        {/* 当前工作表信息（仅多工作表时显示） */}
+        {hasMultipleSheets && (
+          <Row gutter={16} style={{ marginBottom: 16 }}>
+            <Col span={24}>
+              <Card size="small">
+                <Space>
+                  <FileExcelOutlined style={{ color: '#1677ff' }} />
+                  <span style={{ fontWeight: 500 }}>
+                    当前工作表: {sheetNames[dataset.activeSheetIndex || 0]}
+                  </span>
+                  <Divider type="vertical" />
+                  <span style={{ color: '#666' }}>
+                    {dataset.summary.totalRows} 行数据
+                  </span>
+                  <Divider type="vertical" />
+                  <span style={{ color: '#666' }}>
+                    {dataset.summary.totalColumns} 列字段
+                  </span>
+                </Space>
+              </Card>
+            </Col>
+          </Row>
+        )}
 
         {/* 数据表格 */}
         <Table
@@ -197,6 +314,21 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
         {/* 数据统计详情 */}
         <DataSummary dataset={dataset} />
       </Card>
+
+      {/* 数据集详情弹窗 */}
+      <DatasetDetails
+        visible={showDetails}
+        dataset={dataset}
+        onClose={() => setShowDetails(false)}
+        onUpdate={(updatedDataset) => {
+          // 这里可以更新本地数据集信息
+          console.log('数据集更新:', updatedDataset);
+        }}
+        onDelete={() => {
+          // 删除后关闭弹窗
+          setShowDetails(false);
+        }}
+      />
     </div>
   );
 };

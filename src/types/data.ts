@@ -4,11 +4,23 @@ export interface DataSet {
   id: string;
   name: string;
   fileName: string;
+  description?: string;
   columns: ColumnInfo[];
   rows: any[];
   summary: DataSummary;
   uploadTime: Date;
+  createdAt: string;
+  updatedAt?: string;
   size: number;
+  sheets?: SheetInfo[]; // 添加Excel sheets信息
+  activeSheetIndex?: number; // 当前活跃的sheet索引
+}
+
+export interface SheetInfo {
+  name: string;
+  columns: ColumnInfo[];
+  rows: any[];
+  summary: DataSummary;
 }
 
 export interface ColumnInfo {
@@ -40,6 +52,7 @@ export interface DataUploadResult {
   success: boolean;
   dataset?: DataSet;
   error?: string;
+  sheets?: SheetInfo[]; // 当有多个sheet时返回所有sheet信息
 }
 
 export interface DataState {

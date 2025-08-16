@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { Layout, ConfigProvider, notification, Spin } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
-import { useSettingsStore, useUIStore } from './stores';
+import { useSettingsStore, useUIStore, useDataStore, useChatStore } from './stores';
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
@@ -16,14 +16,34 @@ dayjs.locale('zh-cn');
 
 const App: React.FC = () => {
   const { LoadSettings } = useSettingsStore();
+  const { LoadDatasets } = useDataStore();
+  const { LoadChatHistory } = useChatStore();
   const { globalLoading, notifications } = useUIStore();
   
   const [notificationApi, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    // 应用启动时加载设置
-    LoadSettings();
-  }, [LoadSettings]);
+    // 应用启动时加载所有数据
+    const initializeApp = async () => {
+      console.log('🚀 开始初始化应用...');
+      try {
+        await LoadSettings();
+        console.log('✅ 设置加载完成');
+        
+        await LoadDatasets();
+        console.log('✅ 数据集加载完成');
+        
+        await LoadChatHistory();
+        console.log('✅ 聊天历史加载完成');
+        
+        console.log('🎉 应用初始化完成！');
+      } catch (error) {
+        console.error('❌ 应用初始化失败:', error);
+      }
+    };
+
+    initializeApp();
+  }, [LoadSettings, LoadDatasets, LoadChatHistory]);
 
   // 处理通知显示
   useEffect(() => {

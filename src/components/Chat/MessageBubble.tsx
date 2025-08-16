@@ -4,6 +4,11 @@ import React from 'react';
 import { Avatar, Card, Tag, Button, Space } from 'antd';
 import { UserOutlined, RobotOutlined, SettingOutlined, ReloadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import 'highlight.js/styles/github.css'; // 导入代码高亮样式
 import { ChatMessage } from '../../types';
 import { useChatStore } from '../../stores';
 import ChartRenderer from '../Visualization/ChartRenderer';
@@ -43,15 +48,78 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   };
 
   const RenderContent = () => {
-    // 处理换行和格式化
-    const content = message.content.split('\n').map((line, index) => (
-      <div key={index}>
-        {line}
-        {index < message.content.split('\n').length - 1 && <br />}
-      </div>
-    ));
+    // 判断是否为纯文本（没有markdown语法）
+    const hasMarkdown = /[*_`#\-\[\]!]/.test(message.content) || 
+                       message.content.includes('```') || 
+                       message.content.includes('**') ||
+                       message.content.includes('__') ||
+                       message.content.includes('~~');
 
-    return <div className="message-content">{content}</div>;
+    if (hasMarkdown) {
+      return (
+        <div className="message-content markdown-content">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight, rehypeRaw]}
+            components={{
+              // 自定义代码块渲染
+              code: ({ node, inline, className, children, ...props }) => {
+                const match = /language-(\w+)/.exec(className || '');
+                const language = match ? match[1] : '';
+                
+                if (!inline && language) {
+                  return (
+                    <div className="code-block">
+                      <div className="code-header">
+                        <span className="code-language">{language}</span>
+                      </div>
+                      <pre className={className} {...props}>
+                        <code>{children}</code>
+                      </pre>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <code className={`inline-code ${className || ''}`} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+              // 自定义表格渲染
+              table: ({ children }) => (
+                <div className="table-wrapper">
+                  <table className="markdown-table">{children}</table>
+                </div>
+              ),
+              // 自定义链接渲染
+              a: ({ href, children }) => (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
+                  {children}
+                </a>
+              ),
+              // 自定义列表渲染
+              ul: ({ children }) => <ul className="markdown-list">{children}</ul>,
+              ol: ({ children }) => <ol className="markdown-ordered-list">{children}</ol>,
+              // 自定义引用块渲染
+              blockquote: ({ children }) => <blockquote className="markdown-blockquote">{children}</blockquote>,
+            }}
+          >
+            {message.content}
+          </ReactMarkdown>
+        </div>
+      );
+    } else {
+      // 纯文本内容的处理（保持原有逻辑）
+      const content = message.content.split('\n').map((line, index) => (
+        <div key={index}>
+          {line}
+          {index < message.content.split('\n').length - 1 && <br />}
+        </div>
+      ));
+
+      return <div className="message-content">{content}</div>;
+    }
   };
 
   return (

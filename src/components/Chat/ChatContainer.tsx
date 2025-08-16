@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Layout, Empty, Spin } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
-import { useChatStore } from '../../stores';
+import { useChatStore, useDataStore } from '../../stores';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import './ChatContainer.css';
@@ -12,6 +12,7 @@ const { Content } = Layout;
 
 const ChatContainer: React.FC = () => {
   const { messages, isLoading, LoadChatHistory } = useChatStore();
+  const { activeDataset } = useDataStore();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,15 +39,27 @@ const ChatContainer: React.FC = () => {
                   <div className="welcome-content">
                     <h2>欢迎使用 ChatBI</h2>
                     <p>这是一个智能的数据分析对话系统</p>
-                    <div className="welcome-tips">
-                      <h3>使用建议：</h3>
-                      <ul>
-                        <li>• 首先上传您的数据文件（支持 CSV、Excel 格式）</li>
-                        <li>• 使用自然语言描述您想要的分析</li>
-                        <li>• 系统会自动生成图表和洞察</li>
-                        <li>• 您可以继续对话来深入分析</li>
-                      </ul>
-                    </div>
+                    {!activeDataset ? (
+                      <div className="welcome-tips">
+                        <h3 style={{ color: '#ff7a00' }}>开始使用：</h3>
+                        <ul>
+                          <li>• 首先上传您的数据文件（支持 CSV、Excel 格式）</li>
+                          <li>• 在左侧数据集列表中选择要分析的数据</li>
+                          <li>• 使用自然语言描述您想要的分析</li>
+                          <li>• 系统会自动生成图表和洞察</li>
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="welcome-tips">
+                        <h3 style={{ color: '#52c41a' }}>数据集已准备就绪！</h3>
+                        <p>当前数据集：<strong>{activeDataset.name}</strong></p>
+                        <ul>
+                          <li>• 使用自然语言描述您想要的分析</li>
+                          <li>• 系统会自动生成图表和洞察</li>
+                          <li>• 您可以继续对话来深入分析</li>
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 }
               />

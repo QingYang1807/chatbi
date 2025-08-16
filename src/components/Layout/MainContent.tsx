@@ -1,7 +1,7 @@
 // 主内容区域组件
 
 import React from 'react';
-import { Layout, Modal } from 'antd';
+import { Layout, Modal, Tabs } from 'antd';
 import { useUIStore, useDataStore } from '../../stores';
 import ChatContainer from '../Chat/ChatContainer';
 import DataPreview from '../DataUpload/DataPreview';
@@ -9,6 +9,7 @@ import FileUploader from '../DataUpload/FileUploader';
 
 import ModelConfig from '../Settings/ModelConfig';
 import PreferencesPanel from '../Settings/PreferencesPanel';
+import DataManagement from '../Settings/DataManagement';
 import './MainContent.css';
 
 const { Content } = Layout;
@@ -39,7 +40,7 @@ const MainContent: React.FC = () => {
           <div className="data-page">
             {datasets.length === 0 ? (
               <div className="empty-state">
-                <FileUploader />
+                <FileUploader allowMultiple={true} />
               </div>
             ) : (
               <div className="datasets-grid">
@@ -57,10 +58,31 @@ const MainContent: React.FC = () => {
   };
 
   const RenderSettingsContent = () => {
+    const settingsTabItems = [
+      {
+        key: 'model',
+        label: '模型配置',
+        children: <ModelConfig />,
+      },
+      {
+        key: 'preferences',
+        label: '用户偏好',
+        children: <PreferencesPanel />,
+      },
+      {
+        key: 'data',
+        label: '数据管理',
+        children: <DataManagement />,
+      },
+    ];
+
     return (
       <div className="settings-content">
-        <ModelConfig />
-        <PreferencesPanel />
+        <Tabs
+          items={settingsTabItems}
+          defaultActiveKey="model"
+          type="card"
+        />
       </div>
     );
   };
@@ -80,7 +102,7 @@ const MainContent: React.FC = () => {
         width={600}
         destroyOnClose
       >
-        <FileUploader onUploadSuccess={HideDataUploadModal} />
+        <FileUploader onUploadSuccess={HideDataUploadModal} allowMultiple={true} />
       </Modal>
 
       {/* 设置模态框 */}
