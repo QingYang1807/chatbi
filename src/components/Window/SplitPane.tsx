@@ -1,9 +1,8 @@
 // 分屏面板组件
 
 import React, { useState, useRef, useCallback } from 'react';
-import { SplitPane as SplitPaneType, SplitDirection } from '../../types/window';
+import { SplitPane as SplitPaneType } from '../../types/window';
 import { useWindowStore } from '../../stores';
-import WindowContainer from './WindowContainer';
 import SafeWindowContainer from './SafeWindowContainer';
 import './SplitPane.css';
 

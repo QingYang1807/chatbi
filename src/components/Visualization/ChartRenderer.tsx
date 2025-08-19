@@ -1,7 +1,7 @@
 // 图表渲染组件
 
 import React, { useRef, useEffect, useState } from 'react';
-import { Card, Button, Space, Dropdown, message, Switch } from 'antd';
+import { Card, Button, Space, Dropdown, message } from 'antd';
 import { DownloadOutlined, MoreOutlined, CodeOutlined, EyeOutlined } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
 import { ChartData, ChartExportOptions } from '../../types';
@@ -22,7 +22,7 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
 }) => {
   const chartRef = useRef<ReactECharts>(null);
   const [showSource, setShowSource] = useState(chartData.sourceVisible || false);
-  const [mermaidError, setMermaidError] = useState<string | null>(null);
+  // const [mermaidError, setMermaidError] = useState<string | null>(null);
 
   useEffect(() => {
     // 传统图表渲染完成后的处理

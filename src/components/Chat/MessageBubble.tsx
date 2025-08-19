@@ -65,7 +65,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
             rehypePlugins={[rehypeHighlight, rehypeRaw]}
             components={{
               // 自定义代码块渲染
-              code: ({ node, inline, className, children, ...props }) => {
+              code: ({ inline, className, children }: any) => {
                 const match = /language-(\w+)/.exec(className || '');
                 const language = match ? match[1] : '';
                 
@@ -75,7 +75,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
                       <div className="code-header">
                         <span className="code-language">{language}</span>
                       </div>
-                      <pre className={className} {...props}>
+                      <pre className={className}>
                         <code>{children}</code>
                       </pre>
                     </div>
@@ -83,7 +83,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
                 }
                 
                 return (
-                  <code className={`inline-code ${className || ''}`} {...props}>
+                  <code className={`inline-code ${className || ''}`}>
                     {children}
                   </code>
                 );

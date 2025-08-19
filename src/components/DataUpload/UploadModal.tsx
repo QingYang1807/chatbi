@@ -4,7 +4,6 @@ import React, { useState, useRef, useCallback } from 'react';
 import { 
   Modal, 
   Button, 
-  Upload, 
   message, 
   Progress, 
   List, 
@@ -14,7 +13,6 @@ import {
   Popconfirm, 
   Tag, 
   Tooltip, 
-  Divider,
   Row,
   Col,
   Alert
@@ -29,17 +27,16 @@ import {
   CheckCircleOutlined,
   LoadingOutlined,
   CloseCircleOutlined,
-  PlusOutlined,
   ClearOutlined,
   UploadOutlined
 } from '@ant-design/icons';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDataStore } from '../../stores';
 import { dataService } from '../../services/dataService';
 import './UploadModal.css';
 
 const { Title, Text } = Typography;
-const { Dragger } = Upload;
+// const { Dragger } = Upload;
 
 interface UploadModalProps {
   visible: boolean;
@@ -57,7 +54,7 @@ interface FileItem {
 }
 
 const UploadModal: React.FC<UploadModalProps> = ({ visible, onClose, onSuccess }) => {
-  const { UploadDataset, isUploading } = useDataStore();
+  const { UploadDataset } = useDataStore();
   const [fileList, setFileList] = useState<FileItem[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -188,15 +185,15 @@ const UploadModal: React.FC<UploadModalProps> = ({ visible, onClose, onSuccess }
   };
 
   // 文件列表拖拽排序
-  const HandleDragEnd = (result: any) => {
-    if (!result.destination) return;
-
-    const items = Array.from(fileList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setFileList(items);
-  };
+    // const HandleDragEnd = (result: any) => {
+  //   if (!result.destination) return;
+    
+  //   const items = Array.from(fileList);
+  //   const [reorderedItem] = items.splice(result.source.index, 1);
+  //   items.splice(result.destination.index, 0, reorderedItem);
+    
+  //   setFileList(items);
+  // };
 
   // 开始上传
   const StartUpload = async () => {
@@ -436,20 +433,20 @@ const UploadModal: React.FC<UploadModalProps> = ({ visible, onClose, onSuccess }
             size="small"
             className="file-list-card"
           >
-            <DragDropContext onDragEnd={HandleDragEnd}>
+            {/* <DragDropContext onDragEnd={HandleDragEnd}>
               <Droppable droppableId="fileList">
                 {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                  <div {...provided.droppableProps} ref={provided.innerRef}> */}
                     <List
                       size="small"
                       dataSource={fileList}
-                      renderItem={(item, index) => (
-                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                          {(provided, snapshot) => (
+                      renderItem={(item) => (
+                        // <Draggable key={item.id} draggableId={item.id} index={index}>
+                        //   {(provided, snapshot) => (
                             <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              className={`file-list-item ${snapshot.isDragging ? 'dragging' : ''}`}
+                              // ref={provided.innerRef}
+                              // {...provided.draggableProps}
+                              className="file-list-item"
                             >
                               <List.Item
                                 actions={[
@@ -483,7 +480,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ visible, onClose, onSuccess }
                                   avatar={
                                     <Space>
                                       <div
-                                        {...provided.dragHandleProps}
+                                        // {...provided.dragHandleProps}
                                         className="drag-handle"
                                       >
                                         <DragOutlined />
@@ -528,15 +525,15 @@ const UploadModal: React.FC<UploadModalProps> = ({ visible, onClose, onSuccess }
                                 </div>
                               </List.Item>
                             </div>
-                          )}
-                        </Draggable>
+                          // )}
+                        // </Draggable>
                       )}
                     />
-                    {provided.placeholder}
+                    {/* {provided.placeholder}
                   </div>
                 )}
               </Droppable>
-            </DragDropContext>
+            </DragDropContext> */}
           </Card>
         )}
       </div>

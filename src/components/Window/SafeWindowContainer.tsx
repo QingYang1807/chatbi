@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Tabs, Dropdown, Button, Input, Modal } from 'antd';
 import { 
   PlusOutlined, 
-  MoreOutlined, 
   EditOutlined, 
   CloseOutlined,
   SplitCellsOutlined,

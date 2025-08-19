@@ -231,7 +231,7 @@ const DataPreview: React.FC<DataPreviewProps> = ({ dataset, height = 400 }) => {
                         <FileExcelOutlined style={{ color: '#1677ff' }} />
                         {sheetName}
                         {index === (dataset.activeSheetIndex || 0) && (
-                          <Tag color="blue" size="small">当前</Tag>
+                          <Tag color="blue">当前</Tag>
                         )}
                       </Space>
                     </Select.Option>

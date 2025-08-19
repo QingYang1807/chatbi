@@ -1,7 +1,7 @@
 // 多窗口聊天管理器 - 专门用于右侧聊天区域
 
 import React, { useEffect } from 'react';
-import { Layout, Button, Space, Dropdown } from 'antd';
+import { Button, Space, Dropdown } from 'antd';
 import { 
   PlusOutlined, 
   MessageOutlined, 
@@ -13,7 +13,7 @@ import { useWindowStore, useMultiChatStore } from '../../stores';
 import SplitPane from './SplitPane';
 import './MultiChatManager.css';
 
-const { Content } = Layout;
+// const { Content } = Layout;
 
 const MultiChatManager: React.FC = () => {
   const { 

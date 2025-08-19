@@ -18,7 +18,7 @@ const MermaidRenderer: React.FC<MermaidRendererProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [diagramRendered, setDiagramRendered] = useState(false);
+  // const [diagramRendered, setDiagramRendered] = useState(false);
 
   useEffect(() => {
     const renderMermaidDiagram = async () => {
@@ -56,7 +56,7 @@ const MermaidRenderer: React.FC<MermaidRendererProps> = ({
         // 使用Mermaid.js的预期API（这里我们模拟，实际项目需要安装mermaid包）
         await new Promise(resolve => setTimeout(resolve, 500)); // 模拟异步渲染
         
-        setDiagramRendered(true);
+        // setDiagramRendered(true);
         setIsLoading(false);
         
         console.log('✅ Mermaid图表渲染成功');

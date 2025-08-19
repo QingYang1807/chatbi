@@ -1,7 +1,7 @@
 // 数据窗口组件
 
 import React, { useState, useEffect } from 'react';
-import { Layout, Empty, Button, Select, Card, Space, Tabs } from 'antd';
+import { Layout, Empty, Button, Select, Card, Space } from 'antd';
 import { 
   DatabaseOutlined, 
   PlusOutlined, 
@@ -12,7 +12,7 @@ import {
 import { useDataStore, useUIStore, useWindowStore } from '../../stores';
 import { DataWindowData } from '../../types/window';
 import DataPreview from '../DataUpload/DataPreview';
-import FileUploader from '../DataUpload/FileUploader';
+// import FileUploader from '../DataUpload/FileUploader';
 import DatasetDetails from '../DataUpload/DatasetDetails';
 import './DataWindow.css';
 
@@ -26,7 +26,7 @@ type ViewMode = 'list' | 'grid' | 'details';
 
 const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
   const { GetWindowById, UpdateWindowData } = useWindowStore();
-  const { datasets, activeDataset, SetActiveDataset, LoadDatasets } = useDataStore();
+  const { datasets, activeDataset, LoadDatasets } = useDataStore();
   const { ShowDataUploadModal } = useUIStore();
   
   const window = GetWindowById(windowId);
@@ -34,7 +34,7 @@ const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
   
   const [viewMode, setViewMode] = useState<ViewMode>(windowData?.viewMode || 'grid');
   const [selectedDataset, setSelectedDataset] = useState<string | undefined>(
-    windowData?.datasetId || activeDataset
+    windowData?.datasetId || (typeof activeDataset === 'string' ? activeDataset : undefined)
   );
 
   // 同步窗口数据
@@ -52,21 +52,21 @@ const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
 
   const HandleDatasetSelect = (datasetId: string) => {
     setSelectedDataset(datasetId);
-    SetActiveDataset(datasetId);
+    // SetActiveDataset(datasetId);
   };
 
   const HandleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
   };
 
-  const GetViewModeIcon = (mode: ViewMode) => {
-    switch (mode) {
-      case 'grid': return <AppstoreOutlined />;
-      case 'list': return <BarsOutlined />;
-      case 'details': return <FileTextOutlined />;
-      default: return <AppstoreOutlined />;
-    }
-  };
+  // const GetViewModeIcon = (mode: ViewMode) => {
+  //   switch (mode) {
+  //     case 'grid': return <AppstoreOutlined />;
+  //     case 'list': return <BarsOutlined />;
+  //     case 'details': return <FileTextOutlined />;
+  //     default: return <AppstoreOutlined />;
+  //   }
+  // };
 
   const RenderEmptyState = () => (
     <div className="data-window-empty">
@@ -114,7 +114,7 @@ const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
             </Button>
           }
         >
-          <DataPreview dataset={dataset} compact />
+          <DataPreview dataset={dataset} />
         </Card>
       ))}
       
@@ -144,7 +144,7 @@ const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
           <div className="dataset-list-content">
             <div className="dataset-info">
               <h4>{dataset.name}</h4>
-              <p>{dataset.rowCount} 行 × {dataset.columnCount} 列</p>
+              <p>{dataset.summary?.totalRows || 0} 行 × {dataset.summary?.totalColumns || 0} 列</p>
             </div>
             <div className="dataset-actions">
               <Button
@@ -187,7 +187,11 @@ const DataWindow: React.FC<DataWindowProps> = ({ windowId }) => {
 
     return (
       <div className="dataset-details-container">
-        <DatasetDetails dataset={dataset} />
+        <DatasetDetails 
+          dataset={dataset} 
+          visible={true}
+          onClose={() => {}}
+        />
       </div>
     );
   };

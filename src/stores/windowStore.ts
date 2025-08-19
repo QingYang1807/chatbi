@@ -7,11 +7,8 @@ import {
   WindowLayout, 
   SplitPane, 
   WindowType, 
-  SplitDirection, 
   SplitOperation,
-  DefaultLayout,
-  ChatWindowData,
-  DataWindowData
+  DefaultLayout
 } from '../types/window';
 import { storageService } from '../services/storageService';
 

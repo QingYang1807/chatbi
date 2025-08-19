@@ -400,6 +400,7 @@ class ChartService {
       pie: '饼图',
       scatter: '散点图',
       area: '面积图',
+      mermaid: '流程图',
     };
 
     let title = typeNames[chartType] || '图表';

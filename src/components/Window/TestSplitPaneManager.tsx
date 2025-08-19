@@ -69,7 +69,7 @@ const TestSplitPaneManager: React.FC = () => {
           activeKey={activeWindowId}
           onChange={ActivateWindow}
           type="editable-card"
-          onEdit={(targetKey, action) => {
+          onEdit={(_targetKey: any, action) => {
             if (action === 'add') {
               handleCreateWindow();
             }

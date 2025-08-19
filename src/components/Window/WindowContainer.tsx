@@ -4,7 +4,6 @@ import React, { useState, useRef } from 'react';
 import { Tabs, Dropdown, Button, Input, Modal } from 'antd';
 import { 
   PlusOutlined, 
-  MoreOutlined, 
   EditOutlined, 
   CloseOutlined,
   SplitCellsOutlined,
@@ -42,8 +41,6 @@ const WindowContainer: React.FC<WindowContainerProps> = ({ pane }) => {
   const windows = pane.children?.map(id => 
     typeof id === 'string' ? layout.windows[id] : null
   ).filter(Boolean) || [];
-
-  const activeWindow = pane.activeTabId ? layout.windows[pane.activeTabId] : undefined;
 
   const GetWindowIcon = (type: WindowType) => {
     switch (type) {
