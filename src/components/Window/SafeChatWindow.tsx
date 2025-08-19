@@ -17,7 +17,7 @@ interface SafeChatWindowProps {
 
 const SafeChatWindow: React.FC<SafeChatWindowProps> = ({ windowId }) => {
   const { GetWindowById, UpdateWindowData } = useWindowStore();
-  const { datasets } = useDataStore();
+  const { datasets, activeDataset } = useDataStore();
   const {
     GetSession,
     GetSessionMessages,
@@ -54,6 +54,15 @@ const SafeChatWindow: React.FC<SafeChatWindowProps> = ({ windowId }) => {
   const isLoading = sessionId ? GetSessionLoading(sessionId) : false;
   const error = sessionId ? GetSessionError(sessionId) : undefined;
   const sessionDataset = session?.currentDataset;
+
+  // 监听数据存储变化，自动选择新上传的数据集
+  useEffect(() => {
+    if (sessionId && activeDataset && !sessionDataset) {
+      // 如果当前会话没有选择数据集，且有新的活动数据集，则自动选择
+      console.log('🎯 自动选择新上传的数据集:', activeDataset.id);
+      SetSessionDataset(sessionId, activeDataset.id);
+    }
+  }, [sessionId, activeDataset, sessionDataset, SetSessionDataset]);
 
   // 自动滚动到底部
   useEffect(() => {

@@ -104,7 +104,48 @@ export const useDataStore = create<DataState>((set, get) => ({
       // 设置为当前聊天的数据集，并传递完整元数据
       useChatStore.getState().SetCurrentDatasetWithMetadata(dataset.id, metadata);
 
-      // 添加系统消息
+      // 同时更新多聊天存储中的当前活跃会话
+      try {
+        const multiChatStore = await import('./multiChatStore');
+        const multiChatState = multiChatStore.useMultiChatStore.getState();
+        
+        // 获取所有会话
+        const sessions = multiChatState.sessions;
+        const sessionIds = Object.keys(sessions);
+        
+        if (sessionIds.length > 0) {
+          // 找到当前活跃的会话（没有设置数据集或最新更新的会话）
+          let activeSessionId = sessionIds.find(sessionId => {
+            const session = sessions[sessionId];
+            return !session.currentDataset;
+          });
+          
+          // 如果没有找到未设置数据集的会话，选择最新更新的会话
+          if (!activeSessionId) {
+            const latestSession = sessionIds.reduce((latest, current) => {
+              const latestSession = sessions[latest];
+              const currentSession = sessions[current];
+              return currentSession.updatedAt > latestSession.updatedAt ? current : latest;
+            });
+            activeSessionId = latestSession;
+          }
+          
+          if (activeSessionId) {
+            console.log('🎯 更新活跃会话数据集:', activeSessionId);
+            multiChatState.SetSessionDataset(activeSessionId, dataset.id, metadata);
+            
+            // 添加系统消息到活跃会话
+            multiChatState.AddMessage(activeSessionId, {
+              type: 'system',
+              content: `数据集 "${dataset.name}" 上传成功！包含 ${dataset.summary.totalRows} 行数据，${dataset.summary.totalColumns} 个字段。您现在可以开始分析这些数据了。`,
+            });
+          }
+        }
+      } catch (error) {
+        console.warn('更新多聊天存储失败:', error);
+      }
+
+      // 添加系统消息到全局聊天存储
       useChatStore.getState().AddMessage({
         type: 'system',
         content: `数据集 "${dataset.name}" 上传成功！包含 ${dataset.summary.totalRows} 行数据，${dataset.summary.totalColumns} 个字段。您现在可以开始分析这些数据了。`,

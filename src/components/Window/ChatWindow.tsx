@@ -17,7 +17,7 @@ interface ChatWindowProps {
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ windowId }) => {
   const { GetWindowById, UpdateWindowData } = useWindowStore();
-  const { datasets } = useDataStore();
+  const { datasets, activeDataset } = useDataStore();
   const {
     GetSession,
     GetSessionMessages,
@@ -55,7 +55,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ windowId }) => {
   const error = sessionId ? GetSessionError(sessionId) : undefined;
   const sessionDataset = session?.currentDataset;
 
-  // 不再需要同步全局数据集选择，每个会话独立管理
+  // 监听数据存储变化，自动选择新上传的数据集
+  useEffect(() => {
+    if (sessionId && activeDataset && !sessionDataset) {
+      // 如果当前会话没有选择数据集，且有新的活动数据集，则自动选择
+      console.log('🎯 自动选择新上传的数据集:', activeDataset.id);
+      SetSessionDataset(sessionId, activeDataset.id);
+      UpdateWindowData(windowId, { datasetId: activeDataset.id });
+    }
+  }, [sessionId, activeDataset, sessionDataset, SetSessionDataset, UpdateWindowData, windowId]);
 
   // 自动滚动到底部
   useEffect(() => {
