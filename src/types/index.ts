@@ -4,6 +4,7 @@ export * from './chat';
 export * from './data';
 export * from './chart';
 export * from './api';
+export * from './window';
 
 // 通用类型
 export interface LoadingState {

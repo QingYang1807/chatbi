@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { Layout, ConfigProvider, notification, Spin } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
-import { useSettingsStore, useUIStore, useDataStore, useChatStore } from './stores';
+import { useSettingsStore, useUIStore, useDataStore, useWindowStore, useMultiChatStore } from './stores';
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
@@ -17,8 +17,9 @@ dayjs.locale('zh-cn');
 const App: React.FC = () => {
   const { LoadSettings } = useSettingsStore();
   const { LoadDatasets } = useDataStore();
-  const { LoadChatHistory } = useChatStore();
-  const { globalLoading, notifications } = useUIStore();
+  const { LoadLayout } = useWindowStore();
+  const { LoadSessions } = useMultiChatStore();
+  const { notifications, globalLoading, SetGlobalLoading } = useUIStore();
   
   const [notificationApi, contextHolder] = notification.useNotification();
 
@@ -26,24 +27,37 @@ const App: React.FC = () => {
     // 应用启动时加载所有数据
     const initializeApp = async () => {
       console.log('🚀 开始初始化应用...');
+      SetGlobalLoading(true);
+      
       try {
-        await LoadSettings();
-        console.log('✅ 设置加载完成');
+        // 使用超时机制防止无限加载
+        const loadPromises = [
+          LoadSettings(),
+          LoadDatasets(),
+          LoadLayout(),
+          LoadSessions()
+        ];
         
-        await LoadDatasets();
-        console.log('✅ 数据集加载完成');
+        // 10秒超时机制
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('初始化超时')), 10000);
+        });
         
-        await LoadChatHistory();
-        console.log('✅ 聊天历史加载完成');
+        await Promise.race([
+          Promise.all(loadPromises),
+          timeoutPromise
+        ]);
         
         console.log('🎉 应用初始化完成！');
       } catch (error) {
         console.error('❌ 应用初始化失败:', error);
+      } finally {
+        SetGlobalLoading(false);
       }
     };
 
     initializeApp();
-  }, [LoadSettings, LoadDatasets, LoadChatHistory]);
+  }, []); // 空依赖数组，只在组件挂载时执行一次
 
   // 处理通知显示
   useEffect(() => {

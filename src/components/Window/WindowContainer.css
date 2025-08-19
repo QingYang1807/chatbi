@@ -1,0 +1,202 @@
+/* 窗口容器样式 */
+
+.window-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Tab栏样式 */
+.window-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.window-tabs .ant-tabs-nav {
+  margin: 0;
+  background: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.window-tabs .ant-tabs-content-holder {
+  flex: 1;
+  overflow: hidden;
+}
+
+.window-tabs .ant-tabs-content {
+  height: 100%;
+}
+
+.window-tabs .ant-tabs-tabpane {
+  height: 100%;
+  padding: 0;
+}
+
+/* Tab标签样式 */
+.tab-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+  transition: all 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab-label:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+.tab-title {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-label.drag-over {
+  background: #e6f7ff;
+  border-radius: 4px;
+}
+
+/* 添加窗口按钮 */
+.add-window-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.add-window-btn:hover {
+  color: #1677ff;
+  background: #e6f7ff;
+}
+
+/* Tab图标颜色 */
+.ant-tabs-tab .anticon {
+  color: #666;
+}
+
+.ant-tabs-tab-active .anticon {
+  color: #1677ff;
+}
+
+/* 窗口类型特定的图标颜色 */
+.tab-label .anticon-message {
+  color: #52c41a;
+}
+
+.tab-label .anticon-database {
+  color: #1677ff;
+}
+
+.tab-label .anticon-bar-chart {
+  color: #fa8c16;
+}
+
+.tab-label .anticon-setting {
+  color: #722ed1;
+}
+
+/* 空状态样式 */
+.window-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  background: #fafafa;
+}
+
+.window-empty .anticon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+/* 窗口内容样式 */
+.window-content {
+  flex: 1;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* 拖拽指示器 */
+.tab-drag-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: #1677ff;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+/* 上下文菜单样式 */
+.ant-dropdown-menu-item .anticon {
+  margin-right: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .tab-title {
+    max-width: 80px;
+  }
+  
+  .window-tabs .ant-tabs-tab {
+    padding: 4px 8px;
+  }
+  
+  .add-window-btn {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* 无边框模式 */
+.window-container.borderless {
+  border: none;
+  border-radius: 0;
+}
+
+.window-container.borderless .window-tabs .ant-tabs-nav {
+  border-bottom-color: transparent;
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+  .window-container {
+    background: #1f1f1f;
+    border-color: #424242;
+  }
+  
+  .window-tabs .ant-tabs-nav {
+    background: #262626;
+    border-bottom-color: #424242;
+  }
+  
+  .tab-label:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .tab-label.drag-over {
+    background: #003a8c;
+  }
+  
+  .window-empty {
+    background: #1f1f1f;
+    color: #8c8c8c;
+  }
+}

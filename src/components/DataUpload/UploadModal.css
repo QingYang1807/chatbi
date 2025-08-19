@@ -1,0 +1,486 @@
+/* 现代化文件上传弹窗样式 */
+
+.upload-modal-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1677ff;
+}
+
+.upload-modal-content {
+  padding: 8px 0;
+}
+
+.upload-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 拖拽上传区域 */
+.upload-drop-zone {
+  border: 2px dashed #d9d9d9;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-drop-zone:hover {
+  border-color: #1677ff;
+  background: #f0f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(22, 119, 255, 0.12);
+}
+
+.upload-drop-zone.drag-active {
+  border-color: #1677ff;
+  background: #e6f7ff;
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(22, 119, 255, 0.18);
+}
+
+.upload-drop-zone.drag-active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 40%, rgba(22, 119, 255, 0.1) 50%, transparent 60%);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.drop-zone-content {
+  position: relative;
+  z-index: 1;
+}
+
+.upload-icon {
+  font-size: 64px;
+  color: #d9d9d9;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.upload-drop-zone:hover .upload-icon {
+  color: #1677ff;
+  transform: scale(1.1);
+}
+
+.upload-drop-zone .ant-typography-h4 {
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+}
+
+.upload-drop-zone .ant-typography {
+  margin-bottom: 4px;
+}
+
+/* 文件列表卡片 */
+.file-list-card {
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.file-list-card .ant-card-head {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.file-list-card .ant-card-head-title {
+  font-weight: 600;
+  color: #333;
+}
+
+/* 文件列表项 */
+.file-list-item {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.file-list-item:hover {
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.file-list-item.dragging {
+  background: #f0f8ff;
+  border-color: #1677ff;
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.15);
+  transform: rotate(2deg);
+}
+
+.file-list-item .ant-list-item {
+  padding: 12px 16px;
+  border: none;
+}
+
+.file-list-item .ant-list-item-meta {
+  align-items: center;
+}
+
+.file-list-item .ant-list-item-meta-avatar {
+  margin-right: 12px;
+}
+
+/* 拖拽句柄 */
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #d9d9d9;
+  cursor: grab;
+  transition: color 0.3s ease;
+}
+
+.drag-handle:hover {
+  color: #1677ff;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* 文件状态 */
+.file-status {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+}
+
+/* 文件预览 */
+.file-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.preview-row {
+  display: flex;
+  margin-bottom: 4px;
+  min-height: 18px;
+  align-items: center;
+}
+
+.preview-cell {
+  padding: 2px 8px;
+  margin-right: 8px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 3px;
+  min-width: 60px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-row:first-child .preview-cell {
+  background: #e6f7ff;
+  border-color: #91d5ff;
+  font-weight: 600;
+  color: #1677ff;
+}
+
+/* 进度条样式 */
+.file-list-item .ant-progress-line {
+  margin: 4px 0 0 0;
+}
+
+.file-list-item .ant-progress-bg {
+  background: linear-gradient(90deg, #1677ff 0%, #69c0ff 100%);
+}
+
+/* 标签样式 */
+.file-list-item .ant-tag {
+  margin: 0;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* 按钮样式 */
+.upload-modal-footer .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  height: 36px;
+  padding: 0 16px;
+}
+
+.upload-modal-footer .ant-btn-primary {
+  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
+  border: none;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.3);
+}
+
+.upload-modal-footer .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #4096ff 0%, #69c0ff 100%);
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* 警告框样式 */
+.upload-modal-content .ant-alert {
+  border-radius: 8px;
+  border: 1px solid #e6f7ff;
+}
+
+.upload-modal-content .ant-alert-info {
+  background: #f0f8ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .upload-drop-zone {
+    padding: 30px 16px;
+  }
+  
+  .upload-icon {
+    font-size: 48px;
+  }
+  
+  .drop-zone-content .ant-typography-h4 {
+    font-size: 16px;
+  }
+  
+  .file-list-item .ant-list-item {
+    padding: 10px 12px;
+  }
+  
+  .file-list-item .ant-list-item-meta-avatar {
+    margin-right: 8px;
+  }
+  
+  .preview-cell {
+    min-width: 40px;
+    max-width: 100px;
+    font-size: 11px;
+    padding: 1px 4px;
+  }
+}
+
+/* 动画效果 */
+.file-list-item {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 加载状态 */
+.upload-modal-footer .ant-btn-loading {
+  pointer-events: none;
+}
+
+.upload-modal-footer .ant-btn[disabled] {
+  opacity: 0.6;
+}
+
+/* 拖拽列表容器 */
+.file-list-card .ant-list {
+  margin-bottom: 0;
+}
+
+.file-list-card .ant-list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 空状态 */
+.file-list-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+/* 成功状态动画 */
+.file-status .anticon-check-circle {
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 错误状态样式 */
+.file-list-item .ant-typography-caption[data-type="danger"] {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 文件图标样式 */
+.file-list-item .anticon-file-excel,
+.file-list-item .anticon-file-text {
+  font-size: 18px;
+}
+
+/* 操作按钮组 */
+.file-list-item .ant-list-item-action {
+  margin-left: 8px;
+}
+
+.file-list-item .ant-list-item-action li {
+  padding: 0 4px;
+}
+
+.file-list-item .ant-btn-text {
+  color: #666;
+  padding: 4px;
+  height: auto;
+  width: auto;
+  min-width: auto;
+}
+
+.file-list-item .ant-btn-text:hover {
+  background: #f0f0f0;
+}
+
+.file-list-item .ant-btn-text.ant-btn-dangerous:hover {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+/* 模态框标题图标 */
+.upload-modal-header .anticon {
+  font-size: 18px;
+}
+
+/* 工具提示样式 */
+.ant-tooltip-inner {
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* 确认弹窗样式 */
+.ant-popconfirm .ant-popconfirm-message {
+  font-size: 14px;
+}
+
+.ant-popconfirm .ant-btn {
+  border-radius: 4px;
+  font-size: 12px;
+  height: 28px;
+  padding: 0 12px;
+}
+
+/* 列表项悬停效果 */
+.file-list-item:hover .drag-handle {
+  color: #1677ff;
+}
+
+.file-list-item:hover .ant-btn-text {
+  opacity: 1;
+}
+
+.file-list-item .ant-btn-text {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* 拖拽时的占位符样式 */
+.file-list-item + .file-list-item {
+  margin-top: 0;
+}
+
+/* 状态标签颜色 */
+.ant-tag.ant-tag-green {
+  background: #f6ffed;
+  border-color: #b7eb8f;
+  color: #52c41a;
+}
+
+.ant-tag.ant-tag-blue {
+  background: #f0f8ff;
+  border-color: #91d5ff;
+  color: #1677ff;
+}
+
+.ant-tag.ant-tag-red {
+  background: #fff2f0;
+  border-color: #ffccc7;
+  color: #ff4d4f;
+}
+
+/* 文件大小文本 */
+.file-list-item .ant-typography[data-type="secondary"] {
+  color: #999;
+  font-size: 12px;
+}
+
+/* 描述区域间距 */
+.file-list-item .ant-space-vertical {
+  gap: 4px !important;
+}
+
+/* 自定义滚动条 */
+.file-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-preview::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.file-preview::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+.file-preview::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+/* 拖拽指示器 */
+.react-beautiful-dnd-drag-handle {
+  cursor: grab !important;
+}
+
+.react-beautiful-dnd-drag-handle:active {
+  cursor: grabbing !important;
+}
+
+/* 拖拽时的占位符 */
+.react-beautiful-dnd-draggable.react-beautiful-dnd-draggable--is-dragging {
+  box-shadow: 0 8px 24px rgba(22, 119, 255, 0.2) !important;
+}

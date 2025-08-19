@@ -1,0 +1,131 @@
+/* 分屏面板样式 */
+
+.split-pane {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.split-pane.horizontal {
+  flex-direction: row;
+}
+
+.split-pane.vertical {
+  flex-direction: column;
+}
+
+.split-pane.root {
+  background: #fafafa;
+}
+
+.split-pane-child {
+  position: relative;
+  overflow: hidden;
+  min-width: 100px;
+  min-height: 60px;
+}
+
+.split-pane-child.first {
+  border-right: 1px solid #e8e8e8;
+}
+
+.split-pane-child.second {
+  border-left: 1px solid #e8e8e8;
+}
+
+.split-pane.vertical .split-pane-child.first {
+  border-right: none;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.split-pane.vertical .split-pane-child.second {
+  border-left: none;
+  border-top: 1px solid #e8e8e8;
+}
+
+/* 分割线 */
+.split-resizer {
+  position: relative;
+  flex-shrink: 0;
+  background: #f0f0f0;
+  border: 1px solid #d9d9d9;
+  cursor: resize;
+  user-select: none;
+  z-index: 10;
+}
+
+.split-resizer.horizontal {
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.split-resizer.vertical {
+  width: 100%;
+  height: 6px;
+  cursor: row-resize;
+}
+
+.split-resizer:hover {
+  background: #e6f7ff;
+  border-color: #1677ff;
+}
+
+.split-resizer.dragging {
+  background: #1677ff;
+  border-color: #0958d9;
+}
+
+.split-resizer-line {
+  position: absolute;
+  background: #bfbfbf;
+  transition: background-color 0.2s;
+}
+
+.split-resizer.horizontal .split-resizer-line {
+  left: 50%;
+  top: 20%;
+  width: 1px;
+  height: 60%;
+  transform: translateX(-50%);
+}
+
+.split-resizer.vertical .split-resizer-line {
+  top: 50%;
+  left: 20%;
+  width: 60%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.split-resizer:hover .split-resizer-line {
+  background: #1677ff;
+}
+
+.split-resizer.dragging .split-resizer-line {
+  background: #ffffff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .split-resizer.horizontal {
+    width: 8px;
+  }
+  
+  .split-resizer.vertical {
+    height: 8px;
+  }
+  
+  .split-pane-child {
+    min-width: 80px;
+    min-height: 40px;
+  }
+}
+
+/* 禁用选择 */
+.split-resizer.dragging * {
+  user-select: none;
+  pointer-events: none;
+}

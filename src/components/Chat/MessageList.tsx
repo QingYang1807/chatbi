@@ -7,13 +7,14 @@ import './MessageList.css';
 
 interface MessageListProps {
   messages: ChatMessage[];
+  onRetry?: () => void;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+const MessageList: React.FC<MessageListProps> = ({ messages, onRetry }) => {
   return (
     <div className="message-list">
       {messages.map((message) => (
-        <MessageBubble key={message.id} message={message} />
+        <MessageBubble key={message.id} message={message} onRetry={onRetry} />
       ))}
     </div>
   );

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Layout, Modal, Tabs } from 'antd';
 import { useUIStore, useDataStore } from '../../stores';
-import ChatContainer from '../Chat/ChatContainer';
+import MultiChatManager from '../Window/MultiChatManager';
 import DataPreview from '../DataUpload/DataPreview';
 import FileUploader from '../DataUpload/FileUploader';
 
@@ -33,7 +33,7 @@ const MainContent: React.FC = () => {
   const RenderMainContent = () => {
     switch (activePage) {
       case 'chat':
-        return <ChatContainer />;
+        return <MultiChatManager />;
       
       case 'data':
         return (
@@ -53,7 +53,7 @@ const MainContent: React.FC = () => {
         );
       
       default:
-        return <ChatContainer />;
+        return <MultiChatManager />;
     }
   };
 

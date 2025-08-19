@@ -1,6 +1,6 @@
 // 本地存储服务
 
-import { DataSet, ModelConfig, ChatMessage, UIPreferences } from '../types';
+import { DataSet, ModelConfig, ChatMessage, UIPreferences, WindowLayout } from '../types';
 
 class StorageService {
   private readonly STORAGE_KEYS = {
@@ -10,6 +10,8 @@ class StorageService {
     DATASETS: 'chatbi_datasets',
     CHAT_HISTORY: 'chatbi_chat_history',
     ACTIVE_DATASET: 'chatbi_active_dataset',
+    WINDOW_LAYOUT: 'chatbi_window_layout',
+    CHAT_SESSIONS: 'chatbi_chat_sessions',
   };
 
   // API密钥管理
@@ -471,6 +473,76 @@ class StorageService {
         getAllRequest.onerror = () => reject(getAllRequest.error);
       };
     });
+  }
+
+  // 窗口布局管理
+  SaveWindowLayout(layout: WindowLayout): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.WINDOW_LAYOUT, JSON.stringify(layout));
+    } catch (error) {
+      console.error('保存窗口布局失败:', error);
+      throw new Error('保存窗口布局失败');
+    }
+  }
+
+  GetWindowLayout(): WindowLayout | null {
+    try {
+      const layoutData = localStorage.getItem(this.STORAGE_KEYS.WINDOW_LAYOUT);
+      return layoutData ? JSON.parse(layoutData) : null;
+    } catch (error) {
+      console.error('获取窗口布局失败:', error);
+      return null;
+    }
+  }
+
+  ClearWindowLayout(): void {
+    localStorage.removeItem(this.STORAGE_KEYS.WINDOW_LAYOUT);
+  }
+
+  // 多会话聊天管理
+  SaveChatSessions(sessions: Record<string, any>): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.CHAT_SESSIONS, JSON.stringify(sessions));
+    } catch (error) {
+      console.error('保存聊天会话失败:', error);
+      throw new Error('保存聊天会话失败');
+    }
+  }
+
+  GetChatSessions(): Record<string, any> | null {
+    try {
+      const sessionsData = localStorage.getItem(this.STORAGE_KEYS.CHAT_SESSIONS);
+      return sessionsData ? JSON.parse(sessionsData) : null;
+    } catch (error) {
+      console.error('获取聊天会话失败:', error);
+      return null;
+    }
+  }
+
+  SaveChatSession(sessionId: string, session: any): void {
+    try {
+      const sessions = this.GetChatSessions() || {};
+      sessions[sessionId] = session;
+      this.SaveChatSessions(sessions);
+    } catch (error) {
+      console.error('保存单个聊天会话失败:', error);
+      throw new Error('保存聊天会话失败');
+    }
+  }
+
+  DeleteChatSession(sessionId: string): void {
+    try {
+      const sessions = this.GetChatSessions() || {};
+      delete sessions[sessionId];
+      this.SaveChatSessions(sessions);
+    } catch (error) {
+      console.error('删除聊天会话失败:', error);
+      throw new Error('删除聊天会话失败');
+    }
+  }
+
+  ClearChatSessions(): void {
+    localStorage.removeItem(this.STORAGE_KEYS.CHAT_SESSIONS);
   }
 
   private async ClearIndexedDB(): Promise<void> {

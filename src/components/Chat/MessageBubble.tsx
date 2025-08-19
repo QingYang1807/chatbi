@@ -10,16 +10,16 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import 'highlight.js/styles/github.css'; // 导入代码高亮样式
 import { ChatMessage } from '../../types';
-import { useChatStore } from '../../stores';
+// import { useChatStore } from '../../stores';
 import ChartRenderer from '../Visualization/ChartRenderer';
 import './MessageBubble.css';
 
 interface MessageBubbleProps {
   message: ChatMessage;
+  onRetry?: () => void;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
-  const { RetryLastMessage } = useChatStore();
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
 
   const GetAvatar = () => {
     switch (message.type) {
@@ -44,7 +44,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   };
 
   const HandleRetry = () => {
-    RetryLastMessage();
+    if (onRetry) {
+      onRetry();
+    }
   };
 
   const RenderContent = () => {
@@ -146,7 +148,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       >
         {RenderContent()}
 
-        {message.error && message.type === 'assistant' && (
+        {message.error && message.type === 'assistant' && onRetry && (
           <div className="message-actions">
             <Button 
               type="link" 

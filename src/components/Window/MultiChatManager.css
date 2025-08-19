@@ -1,0 +1,174 @@
+/* 多窗口聊天管理器样式 */
+
+.multi-chat-manager {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ffffff;
+}
+
+/* 聊天工具栏 */
+.chat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+  flex-shrink: 0;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #1677ff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.window-count {
+  color: #8c8c8c;
+  font-size: 12px;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* 聊天内容区域 */
+.chat-content-area {
+  flex: 1;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+/* 空状态 */
+.chat-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #ffffff;
+  color: #8c8c8c;
+}
+
+.chat-empty-state h3 {
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.chat-empty-state p {
+  color: #8c8c8c;
+  margin-bottom: 24px;
+}
+
+/* 工具栏按钮样式 */
+.chat-toolbar .ant-btn {
+  height: 28px;
+}
+
+.chat-toolbar .ant-btn-primary {
+  background: #1677ff;
+  border-color: #1677ff;
+}
+
+.chat-toolbar .ant-btn-primary:hover {
+  background: #4096ff;
+  border-color: #4096ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .chat-toolbar {
+    padding: 8px 12px;
+  }
+  
+  .toolbar-title {
+    font-size: 14px;
+  }
+  
+  .toolbar-left {
+    gap: 8px;
+  }
+  
+  .window-count {
+    display: none;
+  }
+  
+  .toolbar-right .ant-space {
+    gap: 4px !important;
+  }
+  
+  .toolbar-right .ant-btn {
+    padding: 0 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-toolbar {
+    padding: 6px 8px;
+  }
+  
+  .toolbar-title span {
+    display: none;
+  }
+  
+  .toolbar-right .ant-btn span:not(.anticon) {
+    display: none;
+  }
+  
+  .toolbar-right .ant-btn {
+    padding: 0 6px;
+    min-width: 28px;
+  }
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+  .multi-chat-manager {
+    background: #1f1f1f;
+  }
+  
+  .chat-toolbar {
+    background: #262626;
+    border-bottom-color: #424242;
+  }
+  
+  .toolbar-title {
+    color: #1677ff;
+  }
+  
+  .window-count {
+    background: #262626;
+    color: #bfbfbf;
+  }
+  
+  .chat-content-area {
+    background: #141414;
+  }
+  
+  .chat-empty-state {
+    background: #1f1f1f;
+  }
+  
+  .chat-empty-state h3 {
+    color: #ffffff;
+  }
+  
+  .chat-empty-state p {
+    color: #8c8c8c;
+  }
+}
