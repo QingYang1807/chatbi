@@ -23,12 +23,25 @@
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   padding: 8px;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s ease;
 }
 
 .input-container:focus-within {
   border-color: #1677ff;
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+/* 深色主题下的输入容器样式 */
+html[data-theme="dark"] .input-container,
+html.theme-dark .input-container {
+  background: #262626;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .input-container:focus-within,
+html.theme-dark .input-container:focus-within {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
 }
 
 .input-textarea {
@@ -58,4 +71,13 @@
   background: #f9f9f9;
   border-radius: 4px;
   border-left: 3px solid #1677ff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 深色主题下的提示样式 */
+html[data-theme="dark"] .input-hint,
+html.theme-dark .input-hint {
+  background: #262626;
+  color: #bfbfbf;
+  border-left-color: #1677ff;
 }

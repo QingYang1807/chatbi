@@ -33,16 +33,6 @@ const Sidebar: React.FC = () => {
       icon: <MessageOutlined />,
       label: '对话分析',
     },
-    {
-      key: 'data',
-      icon: <DatabaseOutlined />,
-      label: '数据管理',
-    },
-    {
-      key: 'charts',
-      icon: <BarChartOutlined />,
-      label: '图表生成',
-    },
   ];
 
   const HandleMenuClick = (e: any) => {

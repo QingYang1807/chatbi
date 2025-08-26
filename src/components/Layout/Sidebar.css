@@ -4,6 +4,15 @@
   background: #fff !important;
   border-right: 1px solid #f0f0f0;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 深色主题下的侧边栏样式 */
+html[data-theme="dark"] .app-sidebar,
+html.theme-dark .app-sidebar {
+  background: #1f1f1f !important;
+  border-right-color: #424242;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-content {
@@ -29,6 +38,13 @@
 .sidebar-menu .ant-menu-item-selected {
   background: #e6f7ff !important;
   color: #1677ff !important;
+}
+
+/* 深色主题下的菜单项选中样式 */
+html[data-theme="dark"] .sidebar-menu .ant-menu-item-selected,
+html.theme-dark .sidebar-menu .ant-menu-item-selected {
+  background: #1677ff !important;
+  color: #ffffff !important;
 }
 
 .sidebar-section {
@@ -111,9 +127,22 @@
 .tip-card {
   background: #f9f9f9;
   border: 1px solid #e8e8e8;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tip-content {
   text-align: center;
   line-height: 1.4;
+}
+
+/* 深色主题下的提示卡片样式 */
+html[data-theme="dark"] .tip-card,
+html.theme-dark .tip-card {
+  background: #262626;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .tip-content,
+html.theme-dark .tip-content {
+  color: #ffffff;
 }

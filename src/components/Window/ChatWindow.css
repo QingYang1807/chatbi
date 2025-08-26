@@ -191,46 +191,73 @@
   }
 }
 
-/* 暗色主题支持 */
-@media (prefers-color-scheme: dark) {
-  .chat-window {
-    background: #1f1f1f;
-  }
-  
-  .chat-content {
-    background: #1f1f1f;
-  }
-  
-  .chat-dataset-selector {
-    background: #262626;
-    border-bottom-color: #424242;
-  }
-  
-  .dataset-selector-label {
-    color: #bfbfbf;
-  }
-  
-  .chat-messages-container {
-    background: #1f1f1f;
-  }
-  
-  .chat-input-container {
-    background: #1f1f1f;
-    border-top-color: #424242;
-  }
-  
-  .welcome-tips {
-    background: #262626;
-    border-left-color: #1677ff;
-  }
-  
-  .chat-loading {
-    background: #262626;
-    color: #bfbfbf;
-  }
-  
-  .chat-error {
-    background: #2a1f1f;
-    border-color: #5c2929;
-  }
+/* 深色主题支持 */
+html[data-theme="dark"] .chat-window,
+html.theme-dark .chat-window {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .chat-content,
+html.theme-dark .chat-content {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .chat-dataset-selector,
+html.theme-dark .chat-dataset-selector {
+  background: #262626;
+  border-bottom-color: #424242;
+}
+
+html[data-theme="dark"] .dataset-selector-label,
+html.theme-dark .dataset-selector-label {
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .chat-messages-container,
+html.theme-dark .chat-messages-container {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .chat-input-container,
+html.theme-dark .chat-input-container {
+  background: #1f1f1f;
+  border-top-color: #424242;
+}
+
+html[data-theme="dark"] .welcome-tips,
+html.theme-dark .welcome-tips {
+  background: #262626;
+  border-left-color: #1677ff;
+}
+
+html[data-theme="dark"] .welcome-tips h3,
+html.theme-dark .welcome-tips h3 {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .welcome-tips li,
+html.theme-dark .welcome-tips li {
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .chat-loading,
+html.theme-dark .chat-loading {
+  background: #262626;
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .chat-error,
+html.theme-dark .chat-error {
+  background: #2a1f1f;
+  border-color: #5c2929;
+}
+
+html[data-theme="dark"] .welcome-content h2,
+html.theme-dark .welcome-content h2 {
+  color: #1677ff;
+}
+
+html[data-theme="dark"] .welcome-content p,
+html.theme-dark .welcome-content p {
+  color: #bfbfbf;
 }

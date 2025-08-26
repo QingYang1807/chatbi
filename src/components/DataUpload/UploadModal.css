@@ -44,6 +44,27 @@
   box-shadow: 0 12px 32px rgba(22, 119, 255, 0.18);
 }
 
+/* 深色主题下的拖拽上传区域样式 */
+html[data-theme="dark"] .upload-drop-zone,
+html.theme-dark .upload-drop-zone {
+  background: #262626;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .upload-drop-zone:hover,
+html.theme-dark .upload-drop-zone:hover {
+  border-color: #1677ff;
+  background: #111b26;
+  box-shadow: 0 8px 24px rgba(22, 119, 255, 0.2);
+}
+
+html[data-theme="dark"] .upload-drop-zone.drag-active,
+html.theme-dark .upload-drop-zone.drag-active {
+  border-color: #1677ff;
+  background: #003a8c;
+  box-shadow: 0 12px 32px rgba(22, 119, 255, 0.3);
+}
+
 .upload-drop-zone.drag-active::before {
   content: '';
   position: absolute;
@@ -81,6 +102,13 @@
   margin-bottom: 8px;
   color: #333;
   font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+/* 深色主题下的拖拽区域文字样式 */
+html[data-theme="dark"] .upload-drop-zone .ant-typography-h4,
+html.theme-dark .upload-drop-zone .ant-typography-h4 {
+  color: #ffffff;
 }
 
 .upload-drop-zone .ant-typography {
@@ -92,11 +120,25 @@
   margin-top: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
 }
 
 .file-list-card .ant-card-head {
   background: #fafafa;
   border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 深色主题下的文件列表卡片样式 */
+html[data-theme="dark"] .file-list-card,
+html.theme-dark .file-list-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .file-list-card .ant-card-head,
+html.theme-dark .file-list-card .ant-card-head {
+  background: #262626;
+  border-bottom-color: #424242;
 }
 
 .file-list-card .ant-card-head-title {
@@ -123,6 +165,26 @@
   border-color: #1677ff;
   box-shadow: 0 4px 16px rgba(22, 119, 255, 0.15);
   transform: rotate(2deg);
+}
+
+/* 深色主题下的文件列表项样式 */
+html[data-theme="dark"] .file-list-item,
+html.theme-dark .file-list-item {
+  background: #1f1f1f;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .file-list-item:hover,
+html.theme-dark .file-list-item:hover {
+  border-color: #666;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .file-list-item.dragging,
+html.theme-dark .file-list-item.dragging {
+  background: #111b26;
+  border-color: #1677ff;
+  box-shadow: 0 4px 16px rgba(22, 119, 255, 0.3);
 }
 
 .file-list-item .ant-list-item {

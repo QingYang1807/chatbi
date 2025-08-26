@@ -14,6 +14,13 @@
   padding: 12px;
   background: #fafafa;
   border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* 深色主题下的模型状态样式 */
+html[data-theme="dark"] .model-status,
+html.theme-dark .model-status {
+  background: #262626;
 }
 
 .api-key-section {
@@ -57,10 +64,23 @@
   background: #f0f8ff;
 }
 
+/* 深色主题下的模型卡片选中样式 */
+html[data-theme="dark"] .model-card.selected .ant-card-head,
+html.theme-dark .model-card.selected .ant-card-head {
+  background: #111b26;
+}
+
 .model-meta {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #f0f0f0;
+  transition: border-color 0.3s ease;
+}
+
+/* 深色主题下的模型元数据样式 */
+html[data-theme="dark"] .model-meta,
+html.theme-dark .model-meta {
+  border-top-color: #424242;
 }
 
 .advanced-config {

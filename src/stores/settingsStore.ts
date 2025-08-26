@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { ModelConfig, UIPreferences, GLMModel } from '../types';
 import { storageService } from '../services/storageService';
 import { aiService } from '../services/aiService';
+import { ApplyTheme, InitializeTheme } from '../utils/themeUtils';
 
 interface SettingsState {
   modelConfig: ModelConfig;
@@ -66,9 +67,16 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   },
 
   UpdateUIPreferences: (preferences: Partial<UIPreferences>) => {
-    set((state) => ({
-      uiPreferences: { ...state.uiPreferences, ...preferences },
+    const newPreferences = { ...get().uiPreferences, ...preferences };
+    
+    set(() => ({
+      uiPreferences: newPreferences,
     }));
+
+    // 如果主题发生变化，应用新主题
+    if (preferences.theme !== undefined) {
+      ApplyTheme(preferences.theme);
+    }
 
     // 保存设置
     get().SaveSettings();
@@ -139,7 +147,14 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       // 加载UI偏好设置
       const savedUIPreferences = storageService.GetUIPreferences();
       if (savedUIPreferences) {
-        set({ uiPreferences: { ...DEFAULT_UI_PREFERENCES, ...savedUIPreferences } });
+        const uiPreferences = { ...DEFAULT_UI_PREFERENCES, ...savedUIPreferences };
+        set({ uiPreferences });
+        
+        // 初始化主题
+        InitializeTheme(uiPreferences.theme);
+      } else {
+        // 使用默认主题
+        InitializeTheme(DEFAULT_UI_PREFERENCES.theme);
       }
 
     } catch (error) {
@@ -172,6 +187,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
     // 更新AI服务配置
     aiService.SetModelConfig(DEFAULT_MODEL_CONFIG);
+
+    // 重置主题
+    InitializeTheme(DEFAULT_UI_PREFERENCES.theme);
 
     // 保存重置后的设置
     get().SaveSettings();

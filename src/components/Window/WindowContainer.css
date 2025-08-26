@@ -175,28 +175,41 @@
   border-bottom-color: transparent;
 }
 
-/* 暗色主题支持 */
-@media (prefers-color-scheme: dark) {
-  .window-container {
-    background: #1f1f1f;
-    border-color: #424242;
-  }
-  
-  .window-tabs .ant-tabs-nav {
-    background: #262626;
-    border-bottom-color: #424242;
-  }
-  
-  .tab-label:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  
-  .tab-label.drag-over {
-    background: #003a8c;
-  }
-  
-  .window-empty {
-    background: #1f1f1f;
-    color: #8c8c8c;
-  }
+/* 深色主题支持 */
+html[data-theme="dark"] .window-container,
+html.theme-dark .window-container {
+  background: #1f1f1f;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .window-tabs .ant-tabs-nav,
+html.theme-dark .window-tabs .ant-tabs-nav {
+  background: #262626;
+  border-bottom-color: #424242;
+}
+
+html[data-theme="dark"] .tab-label:hover,
+html.theme-dark .tab-label:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .tab-label.drag-over,
+html.theme-dark .tab-label.drag-over {
+  background: #003a8c;
+}
+
+html[data-theme="dark"] .window-empty,
+html.theme-dark .window-empty {
+  background: #1f1f1f;
+  color: #8c8c8c;
+}
+
+html[data-theme="dark"] .window-content,
+html.theme-dark .window-content {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .add-window-btn:hover,
+html.theme-dark .add-window-btn:hover {
+  background: #262626;
 }

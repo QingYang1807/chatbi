@@ -9,6 +9,14 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 100;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 深色主题下的头部样式 */
+html[data-theme="dark"] .app-header,
+html.theme-dark .app-header {
+  background: linear-gradient(90deg, #1677ff 0%, #1890ff 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .header-left {

@@ -6,6 +6,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease;
+}
+
+/* 深色主题下的主内容区域样式 */
+html[data-theme="dark"] .main-content,
+html.theme-dark .main-content {
+  background: #141414;
 }
 
 .data-page {

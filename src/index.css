@@ -12,6 +12,33 @@ html, body {
   line-height: 1.6;
   color: #333;
   background-color: #fafafa;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 深色主题样式 */
+html[data-theme="dark"], 
+html.theme-dark {
+  color: #ffffff;
+  background-color: #141414;
+}
+
+html[data-theme="dark"] body,
+html.theme-dark body {
+  color: #ffffff;
+  background-color: #141414;
+}
+
+/* 浅色主题样式 */
+html[data-theme="light"],
+html.theme-light {
+  color: #333;
+  background-color: #fafafa;
+}
+
+html[data-theme="light"] body,
+html.theme-light body {
+  color: #333;
+  background-color: #fafafa;
 }
 
 #root {
@@ -44,6 +71,13 @@ code {
   font-size: 0.9em;
 }
 
+/* 深色主题下的代码样式 */
+html[data-theme="dark"] code,
+html.theme-dark code {
+  background-color: #2a2a2a;
+  color: #e6e6e6;
+}
+
 /* 表格样式优化 */
 .ant-table-thead > tr > th {
   background-color: #fafafa !important;
@@ -54,6 +88,18 @@ code {
   background-color: #f0f8ff !important;
 }
 
+/* 深色主题下的表格样式 */
+html[data-theme="dark"] .ant-table-thead > tr > th,
+html.theme-dark .ant-table-thead > tr > th {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .ant-table-tbody > tr:hover > td,
+html.theme-dark .ant-table-tbody > tr:hover > td {
+  background-color: #2a2a2a !important;
+}
+
 /* 卡片样式优化 */
 .ant-card-head {
   border-bottom: 1px solid #f0f0f0;
@@ -62,6 +108,26 @@ code {
 
 .ant-card-body {
   padding: 16px;
+}
+
+/* 深色主题下的卡片样式 */
+html[data-theme="dark"] .ant-card,
+html.theme-dark .ant-card {
+  background-color: #1f1f1f;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .ant-card-head,
+html.theme-dark .ant-card-head {
+  background-color: #262626;
+  border-bottom-color: #424242;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-card-body,
+html.theme-dark .ant-card-body {
+  background-color: #1f1f1f;
+  color: #ffffff;
 }
 
 /* 按钮样式优化 */
@@ -82,6 +148,20 @@ code {
   box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
 }
 
+/* 深色主题下的输入框样式 */
+html[data-theme="dark"] .ant-input,
+html.theme-dark .ant-input {
+  background-color: #262626;
+  border-color: #424242;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-input:focus,
+html.theme-dark .ant-input:focus {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+}
+
 /* 消息样式 */
 .ant-message {
   z-index: 9999;
@@ -95,6 +175,25 @@ code {
 .ant-modal-header {
   background-color: #fafafa;
   border-bottom: 1px solid #f0f0f0;
+}
+
+/* 深色主题下的模态框样式 */
+html[data-theme="dark"] .ant-modal-content,
+html.theme-dark .ant-modal-content {
+  background-color: #1f1f1f;
+}
+
+html[data-theme="dark"] .ant-modal-header,
+html.theme-dark .ant-modal-header {
+  background-color: #262626;
+  border-bottom-color: #424242;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-modal-body,
+html.theme-dark .ant-modal-body {
+  background-color: #1f1f1f;
+  color: #ffffff;
 }
 
 /* 加载动画 */
@@ -132,4 +231,135 @@ code {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 深色主题下的滚动条样式 */
+html[data-theme="dark"] ::-webkit-scrollbar,
+html.theme-dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track,
+html.theme-dark ::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb,
+html.theme-dark ::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 3px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+html.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* 深色主题下的其他组件样式 */
+html[data-theme="dark"] .ant-select,
+html.theme-dark .ant-select {
+  background-color: #262626;
+}
+
+html[data-theme="dark"] .ant-select-selector,
+html.theme-dark .ant-select-selector {
+  background-color: #262626 !important;
+  border-color: #424242 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .ant-select-dropdown,
+html.theme-dark .ant-select-dropdown {
+  background-color: #1f1f1f;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .ant-select-item,
+html.theme-dark .ant-select-item {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-select-item:hover,
+html.theme-dark .ant-select-item:hover {
+  background-color: #262626;
+}
+
+html[data-theme="dark"] .ant-select-item-option-selected,
+html.theme-dark .ant-select-item-option-selected {
+  background-color: #1677ff;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-switch,
+html.theme-dark .ant-switch {
+  background-color: #424242;
+}
+
+html[data-theme="dark"] .ant-switch-checked,
+html.theme-dark .ant-switch-checked {
+  background-color: #1677ff;
+}
+
+html[data-theme="dark"] .ant-divider,
+html.theme-dark .ant-divider {
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .ant-typography,
+html.theme-dark .ant-typography {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-typography h1,
+html.theme-dark .ant-typography h1,
+html[data-theme="dark"] .ant-typography h2,
+html.theme-dark .ant-typography h2,
+html[data-theme="dark"] .ant-typography h3,
+html.theme-dark .ant-typography h3,
+html[data-theme="dark"] .ant-typography h4,
+html.theme-dark .ant-typography h4,
+html[data-theme="dark"] .ant-typography h5,
+html.theme-dark .ant-typography h5,
+html[data-theme="dark"] .ant-typography h6,
+html.theme-dark .ant-typography h6 {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-alert,
+html.theme-dark .ant-alert {
+  background-color: #1f1f1f;
+  border-color: #424242;
+}
+
+html[data-theme="dark"] .ant-alert-info,
+html.theme-dark .ant-alert-info {
+  background-color: #111b26;
+  border-color: #1677ff;
+}
+
+html[data-theme="dark"] .ant-alert-message,
+html.theme-dark .ant-alert-message {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-alert-description,
+html.theme-dark .ant-alert-description {
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .ant-space,
+html.theme-dark .ant-space {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ant-empty,
+html.theme-dark .ant-empty {
+  color: #8c8c8c;
+}
+
+html[data-theme="dark"] .ant-empty-description,
+html.theme-dark .ant-empty-description {
+  color: #8c8c8c;
 }

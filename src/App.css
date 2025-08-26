@@ -4,11 +4,24 @@
   height: 100vh;
   background: #fff;
   overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
 .app-body {
   height: calc(100vh - 64px);
   overflow: hidden;
+}
+
+/* 深色主题 */
+html[data-theme="dark"] .app-layout,
+html.theme-dark .app-layout {
+  background: #141414;
+}
+
+/* 浅色主题 */
+html[data-theme="light"] .app-layout,
+html.theme-light .app-layout {
+  background: #fff;
 }
 
 .app-loading {
@@ -38,6 +51,45 @@
 
 .ant-menu {
   background: transparent !important;
+}
+
+/* 深色主题下的布局样式 */
+html[data-theme="dark"] .ant-layout-header,
+html.theme-dark .ant-layout-header {
+  background: #1f1f1f !important;
+  border-bottom: 1px solid #424242;
+}
+
+html[data-theme="dark"] .ant-layout-sider,
+html.theme-dark .ant-layout-sider {
+  background: #1f1f1f !important;
+  border-right: 1px solid #424242;
+}
+
+html[data-theme="dark"] .ant-layout-content,
+html.theme-dark .ant-layout-content {
+  background: #141414 !important;
+}
+
+html[data-theme="dark"] .ant-menu,
+html.theme-dark .ant-menu {
+  background: transparent !important;
+}
+
+html[data-theme="dark"] .ant-menu-item,
+html.theme-dark .ant-menu-item {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .ant-menu-item:hover,
+html.theme-dark .ant-menu-item:hover {
+  background-color: #262626 !important;
+}
+
+html[data-theme="dark"] .ant-menu-item-selected,
+html.theme-dark .ant-menu-item-selected {
+  background-color: #1677ff !important;
+  color: #ffffff !important;
 }
 
 .ant-card {

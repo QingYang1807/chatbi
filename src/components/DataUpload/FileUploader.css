@@ -31,6 +31,25 @@
   transform: scale(1.02);
 }
 
+/* 深色主题下的上传拖拽区域样式 */
+html[data-theme="dark"] .upload-dragger,
+html.theme-dark .upload-dragger {
+  background: #262626 !important;
+  border-color: #424242 !important;
+}
+
+html[data-theme="dark"] .upload-dragger:hover,
+html.theme-dark .upload-dragger:hover {
+  border-color: #1677ff !important;
+  background: #111b26 !important;
+}
+
+html[data-theme="dark"] .upload-dragger.drag-over,
+html.theme-dark .upload-dragger.drag-over {
+  border-color: #1677ff !important;
+  background: #003a8c !important;
+}
+
 .upload-content {
   padding: 32px 16px;
 }
@@ -51,6 +70,13 @@
   margin-top: 24px;
   padding-top: 24px;
   border-top: 1px solid #f0f0f0;
+  transition: border-color 0.3s ease;
+}
+
+/* 深色主题下的上传提示样式 */
+html[data-theme="dark"] .upload-tips,
+html.theme-dark .upload-tips {
+  border-top-color: #424242;
 }
 
 .format-item {
@@ -61,6 +87,14 @@
   background: #f9f9f9;
   border-radius: 6px;
   border: 1px solid #e8e8e8;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 深色主题下的格式项样式 */
+html[data-theme="dark"] .format-item,
+html.theme-dark .format-item {
+  background: #262626;
+  border-color: #424242;
 }
 
 .upload-notes {
@@ -83,4 +117,11 @@
   margin-top: 24px;
   padding-top: 16px;
   border-top: 1px solid #f0f0f0;
+  transition: border-color 0.3s ease;
+}
+
+/* 深色主题下的上传操作样式 */
+html[data-theme="dark"] .upload-actions,
+html.theme-dark .upload-actions {
+  border-top-color: #424242;
 }

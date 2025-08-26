@@ -5,6 +5,7 @@
   flex-direction: column;
   height: 100%;
   background: #ffffff;
+  transition: background-color 0.3s ease;
 }
 
 /* 聊天工具栏 */
@@ -16,6 +17,7 @@
   background: #fafafa;
   border-bottom: 1px solid #e8e8e8;
   flex-shrink: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .toolbar-left {
@@ -52,6 +54,7 @@
   flex: 1;
   overflow: hidden;
   background: #f5f5f5;
+  transition: background-color 0.3s ease;
 }
 
 /* 空状态 */
@@ -63,6 +66,7 @@
   height: 100%;
   background: #ffffff;
   color: #8c8c8c;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .chat-empty-state h3 {
@@ -136,39 +140,45 @@
   }
 }
 
-/* 暗色主题支持 */
-@media (prefers-color-scheme: dark) {
-  .multi-chat-manager {
-    background: #1f1f1f;
-  }
-  
-  .chat-toolbar {
-    background: #262626;
-    border-bottom-color: #424242;
-  }
-  
-  .toolbar-title {
-    color: #1677ff;
-  }
-  
-  .window-count {
-    background: #262626;
-    color: #bfbfbf;
-  }
-  
-  .chat-content-area {
-    background: #141414;
-  }
-  
-  .chat-empty-state {
-    background: #1f1f1f;
-  }
-  
-  .chat-empty-state h3 {
-    color: #ffffff;
-  }
-  
-  .chat-empty-state p {
-    color: #8c8c8c;
-  }
+/* 深色主题支持 */
+html[data-theme="dark"] .multi-chat-manager,
+html.theme-dark .multi-chat-manager {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .chat-toolbar,
+html.theme-dark .chat-toolbar {
+  background: #262626;
+  border-bottom-color: #424242;
+}
+
+html[data-theme="dark"] .toolbar-title,
+html.theme-dark .toolbar-title {
+  color: #1677ff;
+}
+
+html[data-theme="dark"] .window-count,
+html.theme-dark .window-count {
+  background: #262626;
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .chat-content-area,
+html.theme-dark .chat-content-area {
+  background: #141414;
+}
+
+html[data-theme="dark"] .chat-empty-state,
+html.theme-dark .chat-empty-state {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .chat-empty-state h3,
+html.theme-dark .chat-empty-state h3 {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .chat-empty-state p,
+html.theme-dark .chat-empty-state p {
+  color: #8c8c8c;
 }

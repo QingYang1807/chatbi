@@ -146,41 +146,47 @@
   }
 }
 
-/* 暗色主题支持 */
-@media (prefers-color-scheme: dark) {
-  .window-manager {
-    background: #141414;
-  }
-  
-  .window-manager-header {
-    background: #1f1f1f;
-    border-bottom-color: #424242;
-  }
-  
-  .window-manager-title {
-    color: #1677ff;
-  }
-  
-  .window-count {
-    background: #262626;
-    color: #bfbfbf;
-  }
-  
-  .window-manager-content {
-    background: #141414;
-  }
-  
-  .window-manager-empty {
-    background: #1f1f1f;
-  }
-  
-  .window-manager-empty h3 {
-    color: #ffffff;
-  }
-  
-  .window-manager-empty p {
-    color: #8c8c8c;
-  }
+/* 深色主题支持 */
+html[data-theme="dark"] .window-manager,
+html.theme-dark .window-manager {
+  background: #141414;
+}
+
+html[data-theme="dark"] .window-manager-header,
+html.theme-dark .window-manager-header {
+  background: #1f1f1f;
+  border-bottom-color: #424242;
+}
+
+html[data-theme="dark"] .window-manager-title,
+html.theme-dark .window-manager-title {
+  color: #1677ff;
+}
+
+html[data-theme="dark"] .window-count,
+html.theme-dark .window-count {
+  background: #262626;
+  color: #bfbfbf;
+}
+
+html[data-theme="dark"] .window-manager-content,
+html.theme-dark .window-manager-content {
+  background: #141414;
+}
+
+html[data-theme="dark"] .window-manager-empty,
+html.theme-dark .window-manager-empty {
+  background: #1f1f1f;
+}
+
+html[data-theme="dark"] .window-manager-empty h3,
+html.theme-dark .window-manager-empty h3 {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .window-manager-empty p,
+html.theme-dark .window-manager-empty p {
+  color: #8c8c8c;
 }
 
 /* 动画效果 */
@@ -215,9 +221,8 @@
   border-color: #d9d9d9;
 }
 
-@media (prefers-color-scheme: dark) {
-  .window-manager-header .ant-btn:not(.ant-btn-primary):hover {
-    background: #262626;
-    border-color: #424242;
-  }
+html[data-theme="dark"] .window-manager-header .ant-btn:not(.ant-btn-primary):hover,
+html.theme-dark .window-manager-header .ant-btn:not(.ant-btn-primary):hover {
+  background: #262626;
+  border-color: #424242;
 }

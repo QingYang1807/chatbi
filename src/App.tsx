@@ -1,12 +1,13 @@
 // 主应用程序组件
 
 import React, { useEffect } from 'react';
-import { Layout, ConfigProvider, notification, Spin } from 'antd';
+import { Layout, ConfigProvider, notification, Spin, theme } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { useSettingsStore, useUIStore, useDataStore, useWindowStore, useMultiChatStore } from './stores';
 import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import MainContent from './components/Layout/MainContent';
+import { GetCurrentTheme } from './utils/themeUtils';
 import './App.css';
 
 // 配置dayjs中文语言
@@ -15,13 +16,17 @@ import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
 const App: React.FC = () => {
-  const { LoadSettings } = useSettingsStore();
+  const { LoadSettings, uiPreferences } = useSettingsStore();
   const { LoadDatasets } = useDataStore();
   const { LoadLayout } = useWindowStore();
   const { LoadSessions } = useMultiChatStore();
   const { notifications, globalLoading, SetGlobalLoading } = useUIStore();
   
   const [notificationApi, contextHolder] = notification.useNotification();
+  
+  // 获取当前主题配置
+  const currentTheme = GetCurrentTheme(uiPreferences.theme);
+  const { defaultAlgorithm, darkAlgorithm } = theme;
 
   useEffect(() => {
     // 应用启动时加载所有数据
@@ -99,7 +104,15 @@ const App: React.FC = () => {
   }
 
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider 
+      locale={zhCN}
+      theme={{
+        algorithm: currentTheme === 'dark' ? darkAlgorithm : defaultAlgorithm,
+        token: {
+          colorPrimary: '#1677ff',
+        },
+      }}
+    >
       {contextHolder}
       <Layout className="app-layout">
         <Header />

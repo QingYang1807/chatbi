@@ -18,13 +18,28 @@ const PreferencesPanel: React.FC = () => {
   const HandlePreferenceChange = (changedFields: any) => {
     UpdateUIPreferences(changedFields);
     
-    // 显示保存成功提示
-    AddNotification({
-      type: 'success',
-      title: '设置已保存',
-      message: '您的偏好设置已自动保存',
-      duration: 2000,
-    });
+    // 如果是主题切换，显示特殊提示
+    if (changedFields.theme) {
+      const themeNames: Record<string, string> = {
+        light: '浅色模式',
+        dark: '深色模式',
+        auto: '跟随系统'
+      };
+      AddNotification({
+        type: 'success',
+        title: '主题已切换',
+        message: `已切换到${themeNames[changedFields.theme] || '未知主题'}`,
+        duration: 2000,
+      });
+    } else {
+      // 显示保存成功提示
+      AddNotification({
+        type: 'success',
+        title: '设置已保存',
+        message: '您的偏好设置已自动保存',
+        duration: 2000,
+      });
+    }
   };
 
   const HandleResetSettings = () => {
