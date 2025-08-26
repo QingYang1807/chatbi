@@ -16,7 +16,6 @@
 
 .upload-dragger {
   background: #fafafa !important;
-  border: 2px dashed #d9d9d9 !important;
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
 }
