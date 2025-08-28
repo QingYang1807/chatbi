@@ -100,7 +100,7 @@ const MainContent: React.FC = () => {
         onCancel={HideDataUploadModal}
         footer={null}
         width={600}
-        destroyOnClose
+        destroyOnHidden
       >
         <FileUploader onUploadSuccess={HideDataUploadModal} allowMultiple={true} />
       </Modal>
@@ -112,7 +112,7 @@ const MainContent: React.FC = () => {
         onCancel={HideSettingsModal}
         footer={null}
         width={900}
-        destroyOnClose
+        destroyOnHidden
       >
         {RenderSettingsContent()}
       </Modal>

@@ -201,7 +201,7 @@ const WindowContainer: React.FC<WindowContainerProps> = ({ pane }) => {
       <Dropdown
         menu={{ items: GetTabContextMenu(window!.id) }}
         trigger={['contextMenu']}
-        destroyPopupOnHide
+                        destroyOnHidden
       >
         <div 
           className={`tab-label ${dragOverTab === window!.id ? 'drag-over' : ''}`}
@@ -255,7 +255,7 @@ const WindowContainer: React.FC<WindowContainerProps> = ({ pane }) => {
           setNewTitle('');
         }}
         width={400}
-        destroyOnClose
+                 destroyOnHidden
       >
         <Input
           value={newTitle}

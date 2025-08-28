@@ -167,7 +167,7 @@ const SafeWindowContainer: React.FC<SafeWindowContainerProps> = ({ pane }) => {
       <Dropdown
         menu={{ items: GetTabContextMenu(window!.id) }}
         trigger={['contextMenu']}
-        destroyPopupOnHide
+                        destroyOnHidden
       >
         <div className="tab-label">
           {GetWindowIcon(window!.type)}

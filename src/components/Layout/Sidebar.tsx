@@ -4,8 +4,6 @@ import React from 'react';
 import { Layout, Menu, Space, Typography, Card, Button, Popconfirm, message } from 'antd';
 import { 
   MessageOutlined, 
-  DatabaseOutlined, 
-  BarChartOutlined, 
   UploadOutlined,
   FileTextOutlined,
   PlusOutlined,
