@@ -97,7 +97,7 @@ const DataSummary: React.FC<DataSummaryProps> = ({ dataset }) => {
                     <div className="sheet-header">
                       <span className="sheet-name">{sheet.name}</span>
                       {index === dataset.activeSheetIndex && (
-                        <Tag color="blue" size="small">当前</Tag>
+                        <Tag color="blue">当前</Tag>
                       )}
                     </div>
                     <div className="sheet-stats">
@@ -111,7 +111,7 @@ const DataSummary: React.FC<DataSummaryProps> = ({ dataset }) => {
                     </div>
                     {sheet.summary.missingValues > 0 && (
                       <div className="sheet-warnings">
-                        <Tag color="warning" size="small">
+                        <Tag color="warning">
                           {sheet.summary.missingValues} 个缺失值
                         </Tag>
                       </div>

@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, Space, message, Spin, Card } from 'antd';
-import { CopyOutlined, DownloadOutlined, PictureOutlined, FileImageOutlined, ExpandOutlined } from '@ant-design/icons';
+import { CopyOutlined, PictureOutlined, FileImageOutlined, ExpandOutlined } from '@ant-design/icons';
 import mermaid from 'mermaid';
 import html2canvas from 'html2canvas';
 import './MermaidRenderer.css';
@@ -21,7 +21,7 @@ const MermaidRenderer: React.FC<MermaidRendererProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // 初始化Mermaid配置

@@ -136,7 +136,6 @@ const ChartRenderer: React.FC<ChartRendererProps> = ({
       <MermaidRenderer
         code={chartData.mermaidCode}
         title={chartData.title}
-        height={height}
         className="chart-mermaid"
       />
     );
