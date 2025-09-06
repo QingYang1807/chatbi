@@ -50,12 +50,18 @@ const MultiChatManager: React.FC = () => {
     initializeChatManager();
   }, [LoadLayout, LoadSessions, CreateWindow]);
 
+  const HandleCreateNewChat = () => {
+    console.log('🆕 创建新对话窗口...');
+    const windowId = CreateWindow('chat', '新建对话');
+    console.log('✅ 新对话窗口创建成功:', windowId);
+  };
+
   const CreateNewWindowMenu = (): MenuProps['items'] => [
     {
       key: 'chat',
       label: '新建对话',
       icon: <MessageOutlined />,
-      onClick: () => CreateWindow('chat', '新建对话'),
+      onClick: HandleCreateNewChat,
     }
   ];
 
@@ -96,13 +102,22 @@ const MultiChatManager: React.FC = () => {
         
         <div className="toolbar-right">
           <Space size="small">
+            <Button 
+              type="primary" 
+              size="small"
+              icon={<PlusOutlined />}
+              onClick={HandleCreateNewChat}
+            >
+              新建对话
+            </Button>
+            
             <Dropdown menu={{ items: CreateNewWindowMenu() }} trigger={['click']}>
               <Button 
-                type="primary" 
                 size="small"
                 icon={<PlusOutlined />}
+                style={{ marginLeft: 4 }}
               >
-                新建对话
+                更多
               </Button>
             </Dropdown>
             
@@ -126,11 +141,14 @@ const MultiChatManager: React.FC = () => {
           <div className="chat-empty-state">
             <h3>暂无对话窗口</h3>
             <p>点击"新建对话"开始使用</p>
-            <Dropdown menu={{ items: CreateNewWindowMenu() }} trigger={['click']}>
-              <Button type="primary" size="large" icon={<PlusOutlined />}>
-                新建对话
-              </Button>
-            </Dropdown>
+            <Button 
+              type="primary" 
+              size="large" 
+              icon={<PlusOutlined />}
+              onClick={HandleCreateNewChat}
+            >
+              新建对话
+            </Button>
           </div>
         )}
       </div>

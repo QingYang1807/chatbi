@@ -93,3 +93,107 @@
   margin-bottom: 12px;
   color: #333;
 }
+
+/* Excel工作表样式 */
+.sheets-section {
+  margin: 24px 0;
+}
+
+.sheets-section h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.sheets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sheet-item {
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.sheet-item.active {
+  border-color: #1677ff;
+  background: #f6f9ff;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.1);
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.sheet-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: #262626;
+}
+
+.sheet-stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.sheet-warnings {
+  margin-top: 8px;
+}
+
+/* 数据分布样式 */
+.data-distribution {
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.data-distribution h5 {
+  margin: 0 0 16px 0;
+  color: #595959;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.distribution-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.distribution-item:last-child {
+  margin-bottom: 0;
+}
+
+.distribution-item .sheet-name {
+  min-width: 120px;
+  font-size: 12px;
+  color: #595959;
+}
+
+.progress-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-container .ant-progress {
+  flex: 1;
+}
+
+.stats-text {
+  font-size: 12px;
+  color: #8c8c8c;
+  white-space: nowrap;
+}

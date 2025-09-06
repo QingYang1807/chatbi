@@ -331,6 +331,52 @@
   font-weight: bold;
 }
 
+/* Mermaid图表样式 */
+.message-mermaid-charts {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.message-mermaid-chart {
+  margin-bottom: 16px;
+}
+
+.message-mermaid-chart:last-child {
+  margin-bottom: 0;
+}
+
+/* 在消息中的Mermaid渲染器样式优化 */
+.message-mermaid-chart .mermaid-renderer {
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.message-mermaid-chart .mermaid-header {
+  padding: 8px 12px;
+}
+
+.message-mermaid-chart .mermaid-title {
+  font-size: 14px;
+}
+
+.message-mermaid-chart .ant-card-body {
+  padding: 12px;
+}
+
+/* 响应式设计 - Mermaid图表 */
+@media (max-width: 768px) {
+  .message-mermaid-chart .mermaid-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .message-mermaid-chart .ant-space {
+    flex-wrap: wrap;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

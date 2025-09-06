@@ -74,7 +74,77 @@ const DataSummary: React.FC<DataSummaryProps> = ({ dataset }) => {
             <Descriptions.Item label="缺失值">{summary.missingValues}</Descriptions.Item>
             <Descriptions.Item label="重复行">{summary.duplicateRows}</Descriptions.Item>
             <Descriptions.Item label="上传时间">{dataset.uploadTime.toLocaleString()}</Descriptions.Item>
+            {dataset.sheets && dataset.sheets.length > 1 && (
+              <Descriptions.Item label="工作表数量" span={2}>
+                <Tag color="cyan">{dataset.sheets.length} 个工作表</Tag>
+                {dataset.activeSheetIndex !== undefined && (
+                  <Tag color="blue">当前: {dataset.sheets[dataset.activeSheetIndex]?.name}</Tag>
+                )}
+              </Descriptions.Item>
+            )}
           </Descriptions>
+
+          {/* Excel工作表详情 */}
+          {dataset.sheets && dataset.sheets.length > 1 && (
+            <div className="sheets-section">
+              <h4>工作表详情</h4>
+              <div className="sheets-list">
+                {dataset.sheets.map((sheet, index) => (
+                  <div 
+                    key={sheet.name} 
+                    className={`sheet-item ${index === dataset.activeSheetIndex ? 'active' : ''}`}
+                  >
+                    <div className="sheet-header">
+                      <span className="sheet-name">{sheet.name}</span>
+                      {index === dataset.activeSheetIndex && (
+                        <Tag color="blue" size="small">当前</Tag>
+                      )}
+                    </div>
+                    <div className="sheet-stats">
+                      <Tag>{sheet.summary.totalRows} 行</Tag>
+                      <Tag>{sheet.summary.totalColumns} 列</Tag>
+                      <Tag color="green">{sheet.summary.numericColumns} 数值列</Tag>
+                      <Tag color="orange">{sheet.summary.stringColumns} 文本列</Tag>
+                      {sheet.summary.dateColumns > 0 && (
+                        <Tag color="purple">{sheet.summary.dateColumns} 日期列</Tag>
+                      )}
+                    </div>
+                    {sheet.summary.missingValues > 0 && (
+                      <div className="sheet-warnings">
+                        <Tag color="warning" size="small">
+                          {sheet.summary.missingValues} 个缺失值
+                        </Tag>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              {/* 数据来源分布 */}
+              <div className="data-distribution">
+                <h5>数据来源分布</h5>
+                {(() => {
+                  const distribution = dataService.GetSheetDataStats(dataset);
+                  return Object.entries(distribution).map(([sheetName, stats]) => (
+                    <div key={sheetName} className="distribution-item">
+                      <span className="sheet-name">{sheetName}</span>
+                      <div className="progress-container">
+                        <Progress 
+                          percent={stats.percentage} 
+                          size="small" 
+                          showInfo={false}
+                          strokeColor="#1677ff"
+                        />
+                        <span className="stats-text">
+                          {stats.count.toLocaleString()} 行 ({stats.percentage}%)
+                        </span>
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          )}
 
           {/* 字段详情 */}
           <div className="columns-section">

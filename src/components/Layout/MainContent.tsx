@@ -10,6 +10,7 @@ import FileUploader from '../DataUpload/FileUploader';
 import ModelConfig from '../Settings/ModelConfig';
 import PreferencesPanel from '../Settings/PreferencesPanel';
 import DataManagement from '../Settings/DataManagement';
+import MermaidTest from '../Test/MermaidTest';
 import './MainContent.css';
 
 const { Content } = Layout;
@@ -51,6 +52,9 @@ const MainContent: React.FC = () => {
             )}
           </div>
         );
+      
+      case 'test':
+        return <MermaidTest />;
       
       default:
         return <MultiChatManager />;

@@ -72,7 +72,11 @@ const SafeWindowContainer: React.FC<SafeWindowContainerProps> = ({ pane }) => {
   };
 
   const HandleTabEdit = (targetKey: React.MouseEvent | React.KeyboardEvent | string, action: 'add' | 'remove') => {
-    if (action === 'remove' && typeof targetKey === 'string') {
+    if (action === 'add') {
+      console.log('🆕 通过Tab编辑创建新对话窗口...');
+      const windowId = CreateWindow('chat', '新建对话');
+      console.log('✅ Tab编辑新对话窗口创建成功:', windowId);
+    } else if (action === 'remove' && typeof targetKey === 'string') {
       const window = layout.windows[targetKey];
       if (window?.canClose !== false) {
         CloseWindow(targetKey);
@@ -85,13 +89,21 @@ const SafeWindowContainer: React.FC<SafeWindowContainerProps> = ({ pane }) => {
       key: 'chat',
       label: '新建对话',
       icon: <MessageOutlined />,
-      onClick: () => CreateWindow('chat', '新建对话'),
+      onClick: () => {
+        console.log('🆕 创建新对话窗口...');
+        const windowId = CreateWindow('chat', '新建对话');
+        console.log('✅ 新对话窗口创建成功:', windowId);
+      },
     },
     {
       key: 'data',
       label: '数据视图',
       icon: <DatabaseOutlined />,
-      onClick: () => CreateWindow('data', '数据视图'),
+      onClick: () => {
+        console.log('🆕 创建数据视图窗口...');
+        const windowId = CreateWindow('data', '数据视图');
+        console.log('✅ 数据视图窗口创建成功:', windowId);
+      },
     },
   ];
 

@@ -7,7 +7,8 @@ import {
   UploadOutlined,
   FileTextOutlined,
   PlusOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  ExperimentOutlined
 } from '@ant-design/icons';
 import { useUIStore, useDataStore } from '../../stores';
 import './Sidebar.css';
@@ -30,6 +31,11 @@ const Sidebar: React.FC = () => {
       key: 'chat',
       icon: <MessageOutlined />,
       label: '对话分析',
+    },
+    {
+      key: 'test',
+      icon: <ExperimentOutlined />,
+      label: 'Mermaid测试',
     },
   ];
 
@@ -104,6 +110,7 @@ const Sidebar: React.FC = () => {
                   size="small"
                   icon={<PlusOutlined />}
                   onClick={HandleUploadClick}
+                  title="添加数据集"
                 />
               </div>
 

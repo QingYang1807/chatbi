@@ -7,7 +7,7 @@ interface UIState {
   sidebarCollapsed: boolean;
   
   // 当前活动页面
-  activePage: 'chat' | 'data' | 'settings';
+  activePage: 'chat' | 'data' | 'settings' | 'test';
   
   // 模态框状态
   showDataUploadModal: boolean;
@@ -23,7 +23,7 @@ interface UIState {
   // Actions
   ToggleSidebar: () => void;
   SetSidebarCollapsed: (collapsed: boolean) => void;
-  SetActivePage: (page: 'chat' | 'data' | 'settings') => void;
+  SetActivePage: (page: 'chat' | 'data' | 'settings' | 'test') => void;
   ShowDataUploadModal: () => void;
   HideDataUploadModal: () => void;
   ShowSettingsModal: () => void;
@@ -62,7 +62,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     set({ sidebarCollapsed: collapsed });
   },
 
-  SetActivePage: (page: 'chat' | 'data' | 'settings') => {
+  SetActivePage: (page: 'chat' | 'data' | 'settings' | 'test') => {
     set({ activePage: page });
   },
 

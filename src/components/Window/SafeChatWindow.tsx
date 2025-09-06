@@ -49,6 +49,13 @@ const SafeChatWindow: React.FC<SafeChatWindowProps> = ({ windowId }) => {
     }
   };
 
+  // 自动初始化会话
+  useEffect(() => {
+    if (!sessionId && window) {
+      initializeSession();
+    }
+  }, [window, sessionId]);
+
   const session = sessionId ? GetSession(sessionId) : undefined;
   const messages = sessionId ? GetSessionMessages(sessionId) : [];
   const isLoading = sessionId ? GetSessionLoading(sessionId) : false;
@@ -76,7 +83,13 @@ const SafeChatWindow: React.FC<SafeChatWindowProps> = ({ windowId }) => {
       console.warn('没有会话ID，无法发送消息');
       return;
     }
-    await SendMessage(sessionId, content);
+    console.log('💬 聊天窗口发送消息:', { sessionId, content });
+    try {
+      await SendMessage(sessionId, content);
+      console.log('✅ 聊天窗口消息发送成功');
+    } catch (error) {
+      console.error('❌ 聊天窗口消息发送失败:', error);
+    }
   };
 
   const HandleClearChat = () => {
@@ -208,7 +221,7 @@ const SafeChatWindow: React.FC<SafeChatWindowProps> = ({ windowId }) => {
         <MessageInput 
           onSendMessage={HandleSendMessage}
           onClearChat={HandleClearChat}
-          disabled={isLoading}
+          disabled={isLoading || !sessionId}
           placeholder={sessionDataset ? 
             `向 ${datasets.find(d => d.id === sessionDataset)?.name} 提问...` : 
             '请先选择数据集或直接输入问题...'

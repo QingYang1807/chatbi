@@ -12,6 +12,7 @@ import 'highlight.js/styles/github.css'; // 导入代码高亮样式
 import { ChatMessage } from '../../types';
 // import { useChatStore } from '../../stores';
 import ChartRenderer from '../Visualization/ChartRenderer';
+import MermaidRenderer from '../Visualization/MermaidRenderer';
 import './MessageBubble.css';
 
 interface MessageBubbleProps {
@@ -49,7 +50,30 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
     }
   };
 
+  // 提取Mermaid图表代码
+  const ExtractMermaidCharts = (content: string) => {
+    const mermaidRegex = /```mermaid\s*\n([\s\S]*?)\n```/g;
+    const charts: { id: string; code: string; title: string }[] = [];
+    let match;
+    
+    while ((match = mermaidRegex.exec(content)) !== null) {
+      const code = match[1].trim();
+      if (code) {
+        charts.push({
+          id: `mermaid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          code,
+          title: `Mermaid图表 ${charts.length + 1}`
+        });
+      }
+    }
+    
+    return charts;
+  };
+
   const RenderContent = () => {
+    // 提取Mermaid图表
+    const mermaidCharts = ExtractMermaidCharts(message.content);
+    
     // 判断是否为纯文本（没有markdown语法）
     const hasMarkdown = /[*_`#\-\[\]!]/.test(message.content) || 
                        message.content.includes('```') || 
@@ -70,6 +94,11 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
                 const language = match ? match[1] : '';
                 
                 if (!inline && language) {
+                  // 如果是Mermaid代码块，不在这里渲染，而是在下面单独渲染
+                  if (language === 'mermaid') {
+                    return null;
+                  }
+                  
                   return (
                     <div className="code-block">
                       <div className="code-header">
@@ -109,6 +138,20 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
           >
             {message.content}
           </ReactMarkdown>
+          
+          {/* 单独渲染Mermaid图表 */}
+          {mermaidCharts.length > 0 && (
+            <div className="message-mermaid-charts">
+              {mermaidCharts.map((chart) => (
+                <MermaidRenderer
+                  key={chart.id}
+                  code={chart.code}
+                  title={chart.title}
+                  className="message-mermaid-chart"
+                />
+              ))}
+            </div>
+          )}
         </div>
       );
     } else {
@@ -144,7 +187,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onRetry }) => {
       <Card 
         className="message-card"
         bodyStyle={{ padding: '12px 16px' }}
-        bordered={false}
+        variant="outlined"
       >
         {RenderContent()}
 

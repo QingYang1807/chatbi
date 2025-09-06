@@ -75,7 +75,11 @@ const WindowContainer: React.FC<WindowContainerProps> = ({ pane }) => {
   };
 
   const HandleTabEdit = (targetKey: React.MouseEvent | React.KeyboardEvent | string, action: 'add' | 'remove') => {
-    if (action === 'remove' && typeof targetKey === 'string') {
+    if (action === 'add') {
+      console.log('🆕 通过Tab编辑创建新对话窗口...');
+      const windowId = CreateWindow('chat', '新建对话');
+      console.log('✅ Tab编辑新对话窗口创建成功:', windowId);
+    } else if (action === 'remove' && typeof targetKey === 'string') {
       const window = layout.windows[targetKey];
       if (window?.canClose !== false) {
         CloseWindow(targetKey);

@@ -30,8 +30,16 @@ const MessageInput: React.FC<MessageInputProps> = ({
   
   const { activeDataset, UploadDataset } = useDataStore();
 
-  // 使用传入的disabled状态
+  // 使用传入的disabled状态，但不因为数据集问题而禁用
   const isDisabled = disabled;
+  
+  // 调试信息
+  console.log('🔍 MessageInput状态:', { 
+    disabled, 
+    isDisabled, 
+    hasActiveDataset: !!activeDataset,
+    inputValue: inputValue.trim() 
+  });
 
   useEffect(() => {
     // 自动聚焦到输入框
@@ -42,14 +50,19 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
   const HandleSend = async () => {
     const content = inputValue.trim();
-    if (!content || isDisabled) return;
+    if (!content || isDisabled) {
+      console.log('🚫 消息发送被阻止:', { content: !!content, disabled: isDisabled });
+      return;
+    }
 
     try {
+      console.log('📤 发送消息:', content);
       setInputValue('');
       
       // 使用传入的onSendMessage回调
       if (onSendMessage) {
         await onSendMessage(content);
+        console.log('✅ 消息发送成功');
       } else {
         console.warn('MessageInput: onSendMessage回调函数未提供');
       }

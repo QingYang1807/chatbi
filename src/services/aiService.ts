@@ -357,11 +357,11 @@ class AIService {
         const columns = context.currentDatasetData.columns || [];
         
         // 智能数据采样策略
-        const { selectedRows, samplingStrategy } = this.SmartDataSampling(dataRows, 2000); // 最多2000行
+        const { selectedRows, samplingStrategy } = this.SmartDataSampling(dataRows, 3000); // 增加到3000行
         
         console.log(`📋 AI服务发送优化后的数据内容: ${selectedRows.length}/${dataRows.length} 行数据，采样策略: ${samplingStrategy}`);
         
-        prompt += `\n\n### 📊 完整数据内容`;
+        prompt += `\n\n### 📊 完整数据内容（可直接分析计算）`;
         prompt += `\n**数据规模**: 正在发送 ${selectedRows.length} 行数据（总共 ${dataRows.length} 行）`;
         prompt += `\n**采样策略**: ${samplingStrategy}`;
         prompt += `\n**数据格式**: 以下是经过智能采样的数据内容，保证了数据的代表性和多样性`;
@@ -370,21 +370,47 @@ class AIService {
         prompt += this.GenerateDataStatsSummary(dataRows, columns);
         
         if (selectedRows.length > 0) {
-          // 使用更紧凑的数据格式
-          prompt += `\n\n**数据内容**:`;
-          prompt += `\n\`\`\`json`;
+          // 生成Markdown表格格式（更易于AI理解和分析）
+          prompt += `\n\n**数据内容（Markdown表格格式）**:`;
           
           // 表头
           const headers = columns.map((col: any) => col.name).filter((name: string) => name !== '_sheet_source');
+          
+          // 生成Markdown表格
+          prompt += `\n\n| ${headers.join(' | ')} |`;
+          prompt += `\n|${headers.map(() => ' --- ').join('|')}|`;
+          
+          // 数据行
+          for (let i = 0; i < Math.min(selectedRows.length, 500); i++) { // 限制表格行数
+            const row = selectedRows[i];
+            const rowValues = headers.map((header: string) => {
+              const value = row[header];
+              if (value === null || value === undefined) return 'NULL';
+              if (typeof value === 'string') return value.replace(/\|/g, '\\|'); // 转义管道符
+              return String(value);
+            });
+            prompt += `\n| ${rowValues.join(' | ')} |`;
+          }
+          
+          if (selectedRows.length > 500) {
+            prompt += `\n\n**注意**: 表格只显示前500行数据以保持可读性。完整采样数据包含 ${selectedRows.length} 行。`;
+          }
+          
+          // 同时提供JSON格式以备程序化分析
+          prompt += `\n\n**JSON格式数据**（用于精确计算）:`;
+          prompt += `\n\`\`\`json`;
           prompt += `\n{`;
           prompt += `\n  "headers": ${JSON.stringify(headers)},`;
+          prompt += `\n  "totalRows": ${dataRows.length},`;
+          prompt += `\n  "sampleRows": ${selectedRows.length},`;
           prompt += `\n  "data": [`;
           
-          // 数据行（使用数组格式更紧凑）
-          for (let i = 0; i < selectedRows.length; i++) {
+          // 数据行（JSON格式）
+          const jsonSampleSize = Math.min(selectedRows.length, 1000); // JSON格式最多1000行
+          for (let i = 0; i < jsonSampleSize; i++) {
             const row = selectedRows[i];
             const rowValues = headers.map((header: string) => row[header]);
-            prompt += `\n    ${JSON.stringify(rowValues)}${i < selectedRows.length - 1 ? ',' : ''}`;
+            prompt += `\n    ${JSON.stringify(rowValues)}${i < jsonSampleSize - 1 ? ',' : ''}`;
           }
           
           prompt += `\n  ]`;
@@ -393,6 +419,15 @@ class AIService {
           
           if (dataRows.length > selectedRows.length) {
             prompt += `\n\n**数据说明**: 为了优化分析效果，采用了智能采样策略，确保包含了数据的关键特征和模式。完整数据集包含 ${dataRows.length} 行，如需分析特定数据段或全量数据，请明确指出需求。`;
+          }
+          
+          // 添加Excel工作表信息
+          if (context.currentDatasetData.sheets && context.currentDatasetData.sheets.length > 1) {
+            prompt += `\n\n**多工作表数据来源**：`;
+            const sheetStats = this.GetSheetDataDistribution(selectedRows);
+            Object.entries(sheetStats).forEach(([sheetName, stats]) => {
+              prompt += `\n- ${sheetName}: ${stats.count} 行数据 (${stats.percentage}%)`;
+            });
           }
         }
       }
@@ -404,10 +439,13 @@ class AIService {
 
 **分析要求**：
 - 🔍 **深度挖掘**：不仅分析数据表面现象，更要挖掘背后的业务逻辑，基于真实数据进行计算和分析
-- 📊 **量化支撑**：所有结论都要有具体的数据证据支持，可以引用实际的数据值进行论证
+- 📊 **量化支撑**：所有结论都要有具体的数据证据支持，可以引用实际的数据值进行论证，直接计算统计指标
 - 💡 **可执行建议**：提供切实可行的业务改进建议，基于数据洞察提出具体行动方案
 - 🎨 **可视化导向**：主动推荐最适合的图表展示方案，并提供具体的数据可视化建议
-- 🔬 **数据驱动**：利用完整的数据内容进行统计分析、趋势识别、异常检测等深度分析`;
+- 🔬 **数据驱动**：利用完整的数据内容进行统计分析、趋势识别、异常检测等深度分析
+- 📈 **智能图表生成**：基于真实数据内容自动生成Mermaid图表，数据需从实际数据中计算得出，不使用虚拟数据
+
+**重要提示**：您现在拥有完整的数据集内容，包括Markdown表格格式和JSON格式的数据。请直接基于这些真实数据进行分析计算，生成准确的统计结果和图表。所有的数值、百分比、排名等都应该从实际数据中计算得出。`;
     } else if (context.currentDatasetData) {
       // 兼容旧的数据集格式
       const dataset = context.currentDatasetData;
@@ -509,50 +547,99 @@ mermaidCode:
 
 ### 🎨 专业制图模板
 
-#### 精选语法模板（业务导向）
+#### 精选语法模板（基于真实数据分析）
 
-**📊 饼图 - 占比分析**
+**📊 饼图 - 占比分析（基于数据计算）**
 \`\`\`mermaid
-pie title 市场份额分布
-    "核心产品" : 45.2
-    "增长产品" : 28.7
-    "成熟产品" : 18.6
-    "其他产品" : 7.5
+pie title 类别分布分析
+    "类别A" : 45.2
+    "类别B" : 28.7
+    "类别C" : 18.6
+    "其他" : 7.5
 \`\`\`
 
-**📈 趋势图 - 时间序列分析**
+**📈 XY趋势图 - 时间序列分析**
 \`\`\`mermaid
+%%{init: {"xyChart": {"width": 900, "height": 600}}}%%
 xyChart-beta
-    title "月度销售增长趋势"
-    x-axis [Q1, Q2, Q3, Q4]
-    y-axis "销售额(万元)" 0 --> 500
-    line [120, 280, 350, 420]
+    title "数据趋势分析"
+    x-axis [Jan, Feb, Mar, Apr, May, Jun]
+    y-axis "数值" 0 --> 1000
+    line [100, 200, 150, 300, 250, 400]
+\`\`\`
+
+**📊 柱状图 - 分类对比分析**
+\`\`\`mermaid
+%%{init: {"xyChart": {"width": 900, "height": 600}}}%%
+xyChart-beta
+    title "分类数据对比"
+    x-axis [A类, B类, C类, D类, E类]
+    y-axis "数量" 0 --> 100
+    bar [65, 59, 80, 81, 56]
 \`\`\`
 
 **🔄 业务流程分析**
 \`\`\`mermaid
 flowchart TD
-    A[潜在客户] --> B{需求评估}
-    B -->|高价值| C[深度跟进]
-    B -->|低价值| D[标准化服务]
-    C --> E[成交转化]
-    D --> F[长期培育]
-    E --> G[客户成功]
+    A[数据源] --> B{数据质量检查}
+    B -->|通过| C[数据处理]
+    B -->|不通过| D[数据清洗]
+    C --> E[分析建模]
+    D --> C
+    E --> F[结果输出]
+    F --> G[业务决策]
 \`\`\`
 
-**🎯 战略分析矩阵**
+**🎯 四象限分析矩阵**
 \`\`\`mermaid
 quadrantChart
-    title 产品组合分析
-    x-axis 市场增长率 --> 高
-    y-axis 市场份额 --> 高
-    quadrant-1 明星产品
-    quadrant-2 现金牛产品
-    quadrant-3 问题产品
-    quadrant-4 瘦狗产品
-    产品A: [0.8, 0.9]
-    产品B: [0.3, 0.7]
-    产品C: [0.7, 0.3]
+    title 数据分析矩阵
+    x-axis 重要性 --> 高
+    y-axis 紧急性 --> 高
+    quadrant-1 立即执行
+    quadrant-2 计划执行
+    quadrant-3 委托执行
+    quadrant-4 考虑删除
+    数据点1: [0.8, 0.9]
+    数据点2: [0.3, 0.7]
+    数据点3: [0.7, 0.3]
+    数据点4: [0.2, 0.2]
+\`\`\`
+
+**📅 时间轴 - 发展历程**
+\`\`\`mermaid
+timeline
+    title 数据发展时间轴
+    2020 : 数据收集开始
+         : 建立基础架构
+    2021 : 数据量显著增长
+         : 实施数据治理
+    2022 : 引入AI分析
+         : 业务价值提升
+    2023 : 全面数字化转型
+         : 预测分析能力
+\`\`\`
+
+**🌊 桑基图 - 流程转化分析**
+\`\`\`mermaid
+sankey-beta
+    来源A,目标1,20
+    来源A,目标2,30
+    来源B,目标1,15
+    来源B,目标3,25
+    来源C,目标2,10
+    来源C,目标3,35
+\`\`\`
+
+**📈 多系列对比图**
+\`\`\`mermaid
+%%{init: {"xyChart": {"width": 900, "height": 600}}}%%
+xyChart-beta
+    title "多维度数据对比"
+    x-axis [Q1, Q2, Q3, Q4]
+    y-axis "数值" 0 --> 500
+    line [120, 280, 350, 420]
+    bar [100, 250, 300, 380]
 \`\`\`
 
 ### 📋 标准输出示例
@@ -930,6 +1017,34 @@ pie title 客户价值层级分布
     }
     
     return summary;
+  }
+
+  // 获取工作表数据分布统计
+  private GetSheetDataDistribution(rows: any[]): Record<string, { count: number; percentage: number }> {
+    const stats: Record<string, { count: number; percentage: number }> = {};
+    const totalRows = rows.length;
+    
+    if (totalRows === 0) {
+      return stats;
+    }
+    
+    // 统计每个sheet的数据行数
+    rows.forEach(row => {
+      const sheetSource = row['_sheet_source'];
+      if (sheetSource) {
+        if (!stats[sheetSource]) {
+          stats[sheetSource] = { count: 0, percentage: 0 };
+        }
+        stats[sheetSource].count++;
+      }
+    });
+    
+    // 计算百分比
+    Object.keys(stats).forEach(sheetName => {
+      stats[sheetName].percentage = Math.round((stats[sheetName].count / totalRows) * 100);
+    });
+    
+    return stats;
   }
 }
 
